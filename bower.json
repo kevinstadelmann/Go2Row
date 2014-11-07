@@ -1,0 +1,19 @@
+{
+  "name": "go2row",
+  "version": "1.0.0",
+  "main": "index.php",
+  "authors": [
+    "Kevin Stadelmann"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.0"
+  }
+}
