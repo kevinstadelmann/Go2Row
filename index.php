@@ -53,18 +53,31 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
+   var_dump($_POST);
+
   
+if(isset($_POST['test'])){
 
 
-  // Ausfahrt Eintragen Formular in DB schreiben
 
-  //$steuermann = $_POST['steuermann_txt'];
+}
+
+
+
+
   if(isset($_POST['ausfahrt_speichern'])){
 
-     $sql =  "INSERT INTO m_ausfahrt (datum, steuermann, km, ruderziel, abfahrt, ankunft, bemerkung, boot_boot_id)";
-     $sql .= "VALUES ('".$_POST["datum_txt"]."','".$_POST["steuermann_txt"]."','".$_POST["km_txt"]."','".$_POST["ruderziel_txt"]."','".$_POST["abfahrt_txt"]."','".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_lst"]."','".$_POST["boot_txt"]."')";
+    $boot = $_POST['datum_txt'];
+    echo $boot;
+    // Formular-Eingabe überprüfen
+    if($boot == ""){
+    }else{
 
-      mysql_query($sql, $connection);
+    $sql =  "INSERT INTO m_ausfahrt (datum, steuermann, km, ruderziel, abfahrt, ankunft, bemerkung, boot_boot_id)";
+    $sql .= "VALUES ('".$_POST["datum_txt"]."','".$_POST["steuermann_txt"]."','".$_POST["km_txt"]."','".$_POST["ruderziel_txt"]."','".$_POST["abfahrt_txt"]."','".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_lst"]."','".$_POST["boot_txt"]."')";
+
+      mysql_query($sql,$connection);
+    }
   }
 
 
@@ -89,7 +102,7 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Logbuch</a></li>
             <li><a href="#about">Statistik</a></li>
-            <li><a href="#contact">Admin</a></li>
+            <li><a href="admin.php">Admin</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -98,7 +111,7 @@
   <!-- HAUPTINHALT -->
   <div class="container">
     <div class="row">
-      <!-- Seiten-Inhaltsverzeichnis -->
+      <!-- Seiten-Inhaltsverzeichnis
       <div class="col-sm-3" id="sidebar" role="navigation">
         <div class="list-group">
           <a href="#" class="list-group-item active">Link</a>
@@ -113,8 +126,8 @@
           Suche nach Ausfahrten
         </p>
         </div>
-      </div><!--Seiten-Inhaltsverzeichnis -->
-
+      </div><!--Seiten-Inhaltsverzeichnis 
+    -->
       <!-- Hauptinhalt - Rechts -->
       <div class="col-xs-12 col-sm-9">
         <p class="pull-right visible-xs">
@@ -127,7 +140,7 @@
         <div class="jumbotron">
           <h1>Seeclub Luzern</h1>
           <p>Am 01.10.2014 wurden 199km gerudert</p>
-        </div> <!-- Jumbotron -->
+        </div
 
         <!-- Large modal - Fenster das aufpopt -->
         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">
@@ -142,24 +155,27 @@
                   <div class="col-md-8">
                     <div class="form-group">
                       <div class="col-md-6">
-                        <form name="Ausfahrt_Formular" method="post" action="index.php">
+                        <form name="Ausfahrt_Formular" method="post">
                           <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Name">
+                            <input type="text" name="name_txt" class="form-control" placeholder="Name">
                             <div class="input-group-addon">
-                              <button type="button" class="btn btn-primary btn-xs">
+                              <button type="input" name="add_name" class="btn btn-primary btn-xs">
                                 <span class="glyphicon glyphicon-plus"></span>
                               </button>
-                            </div>
+                            </div>                   
                           </div>
                           Boot
                           <input name="boot_txt" type="text" class="form-control" placeholder="Boot">
                           Mannschaft
                           <select multiple class="form-control">
-                            <option>Sepp</option>
-                            <option>Hans</option>
-                            <option>Jihad</option>
-                            <option>Kevin</option>
-                            <option>Aathi</option>
+                            <?php
+                            // Ausfahrt Eintragen Formular in DB schreiben
+                            if(isset($_POST['add_name'])){
+                              $name = $_POST['name_txt'];
+                              // Überprüfen ob Name in Mitglieder Tabelle vorhanden
+                              echo "<option>$name</option>";
+                            }
+                              ?>
                           </select>
                           <input name="datum_txt" type="text" class="form-control" placeholder="Datum">
                           <input name="steuermann_txt" type="text" class="form-control" placeholder="Steuermann/frau">
@@ -175,6 +191,7 @@
                           Bemerkung
                           <textarea name="bemerkung_lst" class="form-control" rows="3"></textarea>
                           <input type="submit" name="ausfahrt_speichern" class="btn btn-primary btn-xs">
+
                         </form>
                       </div> <!-- col-md-6 -->
                     </div> <!-- form group -->
@@ -213,7 +230,8 @@
             <div class="panel-heading" role="tab" id="headingTwo">
               <h4 class="panel-title">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Aktuelle Ausfahrten 
+                Aktuelle Ausfahrten
+                <span class="badge">14</span> 
                 </a>
               </h4>
             </div>
