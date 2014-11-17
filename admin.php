@@ -72,6 +72,7 @@
         $kategorie = 1;
       }
 
+
     $sql =  "INSERT INTO mitglied (name,vorname,kategorie_kategorie_id)";
     $sql .= "VALUES ('".$_POST["name_txt"]."','".$_POST["vorname_txt"]."', $kategorie)";
 
@@ -149,7 +150,7 @@
     <h4 class="modal-title">Mitglied erstellen</h4>
    </div>
     <div class="modal-body">
-      
+
 
           <form class="form-horizontal" id="mitglied_form" name="commentform" method="post" action="admin.php">
             <div class="form-group">
@@ -166,6 +167,7 @@
                   <input type="text" class="form-control" id="vorname_txt" name="vorname_txt" placeholder="Vorname"/>
                 </div>
             </div>
+            
 
             <div class="form-group">
               <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
@@ -200,7 +202,7 @@
         <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
 
         <table class="table table-striped">
-        <tr> <td><b> Name </b> </td> <td> <b>Vorname</b> </td> <td><b> Kategorie </b></td> </tr>
+        <tr> <td><b> Name </b> </td> <td> <b>Vorname</b> </td> <td><b> Kategorie </b></td> <td><b> </b></td></tr>
         <?php
           $auswahl_sql = "SELECT * FROM mitglied";
           $mitglieder = mysql_query($auswahl_sql);
@@ -210,6 +212,7 @@
             echo "<td>" . $row['name'] . "</td>";
             echo "<td>" . $row['vorname'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
+            //echo "<td>".  $row['mitglied_id']."<a href='loeschen.php?id=".$row->mitglied_id."'>Löschen</a></td>";
             echo "</tr>";
            }
         ?>
@@ -233,67 +236,15 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js" type="text/javascript"></script>
 
     <script>
-$('#mitglied_form').bootstrapValidator({
-message: 'This value is not valid', 
-feedbackIcons: {
-    valid: 'glyphicon glyphicon-ok',
-    invalid: 'glyphicon glyphicon-remove',
-    validating: 'glyphicon glyphicon-refresh'
-  },
-fields: {
-    name_txt: {
-      validators: {
-        notEmpty: {
-          message: "Bitte einen Namen eingeben!"
-              }, // notEmpty
-        regexp: {
-          regexp: /^[A-Za-z\s.'-]+$/,
-          message: "Alphabetical characters, hyphens and spaces"
-        }
-            } // validators
-          },  // firstname
-    vorname_txt: {
-      validators: {
-        notEmpty: {
-          message: "Bitte einen Vornamen eingeben!"
-              } // notEmpty
-            } // validators
-          },  // lastname
-    kategorie_slc: {
-      validators: {
-        notEmpty: {
-          message: "Bitte eine Kategorie auswählen!"
-              } // notEmpty
-            } // validators
-          },  // kategorie
-    email: {
-      validators: {
-        notEmpty: {
-          message: "An email address is mandatory."
-              }, // notEmpty
-        emailAddress: {
-          message: "This is not a valid email address"
-                } // emailAddress     
-            } // validators
-          },  // email
-    comments: {
-      validators: {
-        notEmpty: {
-          message: "Are you sure? No comment?"
-              } // notEmpty
-            } // validators
-          } //comments
-    } // fields
-    });
-$('#mitglied_form').on('shown.bs.modal', function() {
-$('#mitglied_form').bootstrapValidator('resetForm', true);
-});
+
 </script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
     <script src="offcanvas.js"></script>
+    <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
+    <script src="frames/validation.js"></script>
 
 
   

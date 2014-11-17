@@ -1,0 +1,59 @@
+
+        <!-- Large modal - Fenster das aufpopt -->
+        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">
+            <span class="glyphicon glyphicon-plus"></span>Ausfahrt hinzufügen
+        </button>
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <!-- Ausfahrt eintragen Formular -->
+                Hier Formular aufbauen
+                 <div class="row">
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <div class="col-md-6">
+                        <form name="Ausfahrt_Formular" method="post">
+                          <div class="input-group">
+                            <input type="text" name="name_txt" class="form-control" placeholder="Name">
+                            <div class="input-group-addon">
+                              <button type="input" name="add_name" class="btn btn-primary btn-xs">
+                                <span class="glyphicon glyphicon-plus"></span>
+                              </button>
+                            </div>                   
+                          </div>
+                          Boot
+                          <input name="boot_txt" type="text" class="form-control" placeholder="Boot">
+                          Mannschaft
+                          <select multiple class="form-control">
+                            <?php
+                            // Ausfahrt Eintragen Formular in DB schreiben
+                            if(isset($_POST['add_name'])){
+                              $name = $_POST['name_txt'];
+                              // Überprüfen ob Name in Mitglieder Tabelle vorhanden
+                              echo "<option>$name</option>";
+                            }
+                              ?>
+                          </select>
+                          <input name="datum_txt" type="text" class="form-control" placeholder="Datum">
+                          <input name="steuermann_txt" type="text" class="form-control" placeholder="Steuermann/frau">
+
+                          Zeit
+                          <input name="abfahrt_txt" type="text" class="form-control" placeholder="Abfahrtszeit hh:mm">
+                          <input name="ankunft_txt" type="text" class="form-control" placeholder="Ankunftszeit hh:mm">
+
+                          Statistik
+                          <input name="ruderziel_txt" type="text" class="form-control" placeholder="Ruderziel">
+                          <input name="km_txt" type="text" class="form-control" placeholder="KM">
+
+                          Bemerkung
+                          <textarea name="bemerkung_lst" class="form-control" rows="3"></textarea>
+                          <input type="submit" name="ausfahrt_speichern" class="btn btn-primary btn-xs">
+
+                        </form>
+                      </div> <!-- col-md-6 -->
+                    </div> <!-- form group -->
+                  </div> <!-- col-md-8 -->
+                </div> <!-- row -->
+            </div>
+          </div>
+        </div>

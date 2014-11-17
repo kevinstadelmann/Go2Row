@@ -142,64 +142,70 @@ if(isset($_POST['test'])){
           <p>Am 01.10.2014 wurden 199km gerudert</p>
         </div
 
-        <!-- Large modal - Fenster das aufpopt -->
-        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">
-            <span class="glyphicon glyphicon-plus"></span>Ausfahrt hinzufügen
-        </button>
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <!-- Ausfahrt eintragen Formular -->
-                Hier Formular aufbauen
-                 <div class="row">
-                  <div class="col-md-8">
-                    <div class="form-group">
-                      <div class="col-md-6">
-                        <form name="Ausfahrt_Formular" method="post">
-                          <div class="input-group">
-                            <input type="text" name="name_txt" class="form-control" placeholder="Name">
-                            <div class="input-group-addon">
-                              <button type="input" name="add_name" class="btn btn-primary btn-xs">
-                                <span class="glyphicon glyphicon-plus"></span>
-                              </button>
-                            </div>                   
-                          </div>
-                          Boot
-                          <input name="boot_txt" type="text" class="form-control" placeholder="Boot">
-                          Mannschaft
-                          <select multiple class="form-control">
-                            <?php
-                            // Ausfahrt Eintragen Formular in DB schreiben
-                            if(isset($_POST['add_name'])){
-                              $name = $_POST['name_txt'];
-                              // Überprüfen ob Name in Mitglieder Tabelle vorhanden
-                              echo "<option>$name</option>";
-                            }
-                              ?>
-                          </select>
-                          <input name="datum_txt" type="text" class="form-control" placeholder="Datum">
-                          <input name="steuermann_txt" type="text" class="form-control" placeholder="Steuermann/frau">
 
-                          Zeit
-                          <input name="abfahrt_txt" type="text" class="form-control" placeholder="Abfahrtszeit hh:mm">
-                          <input name="ankunft_txt" type="text" class="form-control" placeholder="Ankunftszeit hh:mm">
 
-                          Statistik
-                          <input name="ruderziel_txt" type="text" class="form-control" placeholder="Ruderziel">
-                          <input name="km_txt" type="text" class="form-control" placeholder="KM">
+<!-- Button to trigger modal --> 
+    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
 
-                          Bemerkung
-                          <textarea name="bemerkung_lst" class="form-control" rows="3"></textarea>
-                          <input type="submit" name="ausfahrt_speichern" class="btn btn-primary btn-xs">
+    <!-- Modal -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Ausfahrt eintragen</h4>
+   </div>
+    <div class="modal-body">
 
-                        </form>
-                      </div> <!-- col-md-6 -->
-                    </div> <!-- form group -->
-                  </div> <!-- col-md-8 -->
-                </div> <!-- row -->
+
+          <form class="form-horizontal" id="ausfahrt_form" name="commentform" method="post" action="index.php">
+            <div class="form-group">
+
+             <label class="control-label col-md-4" for="boot">Boot</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="boot_txt" name="boot_txt" placeholder="Boot"/>
+              </div>
             </div>
-          </div>
-        </div>
+          
+            <div class="form-group">
+              <label class="control-label col-md-4" for="name_txt">Name</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="vorname_txt" name="vorname_txt" placeholder="Vorname"/>
+                </div>
+            </div>
+            
+
+            <div class="form-group">
+              <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
+                <div class="col-md-6">           
+                  <select name="kategorie_slc" size="5" class="form-control">
+                    <?php
+                    $auswahl_sql = "SELECT kategorie FROM kategorie";
+                    $kategorie = mysql_query($auswahl_sql);
+               
+                    while($row = mysql_fetch_array($kategorie)){
+                    echo"<option>" . $row['kategorie'] . "</option>";
+                    }
+
+                    ?>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-md-6">
+                <input type="submit" name="mitglied_speichern" class="btn btn-primary btn-xs">
+              </div>
+            </div>
+          </form>
+        
+      </div><!-- End of Modal body -->
+    </div><!-- End of Modal content -->
+  </div><!-- End of Modal dialog -->
+</div><!-- End of Modal -->
+
+
+
 
         <!-- Colapse 1-3 -->
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -289,8 +295,8 @@ if(isset($_POST['test'])){
 
     <script src="offcanvas.js"></script>
 
-    <!-- Kalender -->
-    <script src="dhtmlxcalendar.js"></script>  
+    <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
+    <script src="frames/validation.js"></script>
   
 
   </body>
