@@ -206,13 +206,15 @@
         <?php
           $auswahl_sql = "SELECT * FROM mitglied";
           $mitglieder = mysql_query($auswahl_sql);
+         
      
-          while($row = mysql_fetch_array($mitglieder)){
+          while( $row = mysql_fetch_array($mitglieder)){
+            $mitglied_id = $row[0];
             echo"<tr>";
             echo "<td>" . $row['name'] . "</td>";
             echo "<td>" . $row['vorname'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
-            //echo "<td>".  $row['mitglied_id']."<a href='loeschen.php?id=".$row->mitglied_id."'>Löschen</a></td>";
+            echo "<td>" . $row['mitglied_id']."<a href='delete.php?mitglied_id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
             echo "</tr>";
            }
         ?>
