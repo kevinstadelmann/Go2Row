@@ -198,7 +198,7 @@
             echo"<tr>";
             echo "<td>" . $row['b_name'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
-            echo "<td>" . $row['boot_id']."<a href='delete.php?boot_id=".$row['boot_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
+            echo "<td>" . $row['boot_id']."<a href='delete_boot.php?boot_id=".$row['boot_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
             echo "</tr>";
            }
         ?>

@@ -25,5 +25,6 @@
 
 
   mysql_query("DELETE FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['boot_id'])."'");
+ header("Location: admin_boot.php");
 
   ?>
