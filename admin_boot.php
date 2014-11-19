@@ -68,15 +68,16 @@
     if($name == "" || $kategorie == "" ){
       echo "Bitte einen Namen eingeben";
     }else{
-      if($kategorie == "Leistungssport"){
+    	if($kategorie == "Leistungssport"){
         $kategorie = 1;
-      }
 
-
-    $sql =  "INSERT INTO boot (name,kategorie_id)";
-    $sql .= "VALUES ('".$_POST["name_txt"]."',$kategorie)";
+      } 
+    $sql =  "INSERT INTO boot (b_name, kategorie_kategorie_id, schaden)";
+    $sql .= "VALUES ('".$_POST["name_txt"]."', '$kategorie', '0')";
 
       mysql_query($sql, $connection);
+      
+
     }
   }
 
@@ -188,7 +189,7 @@
         <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
 
         <table class="table table-striped">
-        <tr> <td><b> Name </b></td> <td><b> Kategorie </b></td> </tr>
+        <tr> <td><b> Name </b></td> <td><b> Kategorie </b></td> <td><b> Löschen </b></td></tr>
         <?php
           $auswahl_sql = "SELECT * FROM boot";
           $boot = mysql_query($auswahl_sql);
@@ -197,7 +198,7 @@
             echo"<tr>";
             echo "<td>" . $row['b_name'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
-            //echo "<td>".  $row['mitglied_id']."<a href='loeschen.php?id=".$row->mitglied_id."'>Löschen</a></td>";
+            echo "<td>" . $row['boot_id']."<a href='delete.php?boot_id=".$row['boot_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
             echo "</tr>";
            }
         ?>

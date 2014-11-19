@@ -219,7 +219,7 @@
 
           <?php
           // bearbeiten
-          if(isset($_GET['action']) && $_GET['action'] == 'bearbeiten'){
+          if( isset($_GET['action']) && $_GET['action'] == 'bearbeiten'){
             $bearbeiten = mysql_query("SELECT * mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
             $row = mysql_fetch_array($bearbeiten);
           
@@ -299,7 +299,7 @@
             echo "<td>" . $row['name'] . "</td>";
             echo "<td>" . $row['vorname'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
-            echo "<td>" . $row['mitglied_id']."<a href='delete.php?action=hinzufuegen=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
+            //echo "<td>" . $row['mitglied_id']."<a href='delete.php?action=hinzufuegen=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
             echo "<td>" . $row['mitglied_id']."<a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
             echo "<td>" . $row['mitglied_id']."<a href='?action=bearbeiten&id=".$row['mitglied_id']."'><a href='#myModal2' role='button' class='btn btn-default btn-sm' data-toggle='modal'></a></td>";
             echo "</tr>";
