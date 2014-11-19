@@ -80,6 +80,15 @@
     }
   }
 
+  // Benutzer Löschen
+  if(isset($_GET['action']) && $_GET['action'] == 'delete'){
+  mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
+  //header("Location: admin.php");
+  }
+
+
+  
+
 
   //mysql_close($connection);
 
@@ -141,7 +150,7 @@
 <!-- Button to trigger modal --> 
     <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Mitglied hinzufügen</a>
 
-    <!-- Modal -->
+    <!-- Modal - Mitglieder hinzufügen-->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
  <div class="modal-dialog">
   <div class="modal-content">
@@ -172,7 +181,7 @@
             <div class="form-group">
               <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
                 <div class="col-md-6">           
-                  <select name="kategorie_slc" size="5" class="form-control">
+                  <select name="kategorie_slc" size="1" class="form-control">
                     <?php
                     $auswahl_sql = "SELECT kategorie FROM kategorie";
                     $kategorie = mysql_query($auswahl_sql);
@@ -198,11 +207,87 @@
   </div><!-- End of Modal dialog -->
 </div><!-- End of Modal -->
 
+<!-- Modal - Mitglieder bearbeiten-->
+<div id="myModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Mitglied erstellen</h4>
+   </div>
+    <div class="modal-body">
+
+          <?php
+          // bearbeiten
+          if(isset($_GET['action']) && $_GET['action'] == 'bearbeiten'){
+            $bearbeiten = mysql_query("SELECT * mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
+            $row = mysql_fetch_array($bearbeiten);
+          
+          //header("Location: admin.php");
+          }
+          ?>
+
+
+          <form class="form-horizontal" id="mitglied_bearb" name="commentform" method="post" action="admin.php">
+            <div class="form-group">
+
+             <label class="control-label col-md-4" for="name">Name</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="name_txt" name="name_txt" placeholder="Name"/>
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label class="control-label col-md-4" for="vorname_txt">Vorname</label>
+                <div class="col-md-6">
+                  <?php echo "<input type='text' value='".$row['vorname']."' class='form-control' id='vorname_txt' name='vorname_txt'/>";?>
+                </div>
+            </div>
+            
+
+            <div class="form-group">
+              <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
+                <div class="col-md-6">           
+                  <select name="kategorie_slc" size="1" class="form-control">
+                    <?php
+                    $auswahl_sql = "SELECT kategorie FROM kategorie";
+                    $kategorie = mysql_query($auswahl_sql);
+               
+                    while($row = mysql_fetch_array($kategorie)){
+                    echo"<option>" . $row['kategorie'] . "</option>";
+                    }
+
+                    ?>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-md-6">
+                <input type="submit" name="mitglied_speichern" class="btn btn-primary btn-xs">
+              </div>
+            </div>
+          </form>
+
+
+        
+      </div><!-- End of Modal body -->
+    </div><!-- End of Modal content -->
+  </div><!-- End of Modal dialog -->
+</div><!-- End of Modal -->
+
 
         <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
 
         <table class="table table-striped">
-        <tr> <td><b> Name </b> </td> <td> <b>Vorname</b> </td> <td><b> Kategorie </b></td> <td><b> </b></td></tr>
+        <tr> 
+          <td><b> Name   </b></td>
+          <td><b> Vorname</b></td>
+          <td><b> Kategorie </b></td>
+          <td><b>Löschen Variante 1 </b></td>
+          <td><b>Löschen Variante 2 </b></td>
+          <td><b>Bearbeiten </b></td>
+        </tr>
         <?php
           $auswahl_sql = "SELECT * FROM mitglied";
           $mitglieder = mysql_query($auswahl_sql);
@@ -214,7 +299,9 @@
             echo "<td>" . $row['name'] . "</td>";
             echo "<td>" . $row['vorname'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
-            echo "<td>" . $row['mitglied_id']."<a href='delete.php?mitglied_id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
+            echo "<td>" . $row['mitglied_id']."<a href='delete.php?action=hinzufuegen=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
+            echo "<td>" . $row['mitglied_id']."<a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
+            echo "<td>" . $row['mitglied_id']."<a href='?action=bearbeiten&id=".$row['mitglied_id']."'><a href='#myModal2' role='button' class='btn btn-default btn-sm' data-toggle='modal'></a></td>";
             echo "</tr>";
            }
         ?>

@@ -25,4 +25,6 @@
 
 
   mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['mitglied_id'])."'");
+
+  header("Location: admin.php");
   ?>
