@@ -24,10 +24,6 @@
    }
 
 
-  mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['mitglied_id'])."'");
- 
- header("Location: admin.php");
-
-
+  mysql_query("DELETE FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['boot_id'])."'");
 
   ?>
