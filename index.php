@@ -102,7 +102,7 @@ if(isset($_POST['test'])){
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Logbuch</a></li>
             <li><a href="#about">Statistik</a></li>
-            <li><a href="admin.php">Admin</a></li>
+            <li><a href="admin_mitglied.php">Admin</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
