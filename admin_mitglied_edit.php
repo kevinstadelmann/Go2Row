@@ -63,8 +63,29 @@
    $edit_sql = mysql_query("SELECT * FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
    $edit_array = mysql_fetch_array($edit_sql);
    
+   // bearbeitete Daten speichern
+   
 
+   if(isset($_POST['mitglied_updaten'])){
+    $kategorie = $_POST['kategorie_slc'];
+ 
+    if($kategorie == "Leistungssport"){
+        $kategorie = 1;
+    }else{
+      $kategorie = 2;
+    }
 
+    $sql =  "UPDATE mitglied ";
+    $sql .= "SET name='".$_POST["name_txt"]."',vorname='".$_POST["vorname_txt"]."',kategorie_kategorie_id=$kategorie ";
+    $sql .= "WHERE mitglied_id=".$edit_array['mitglied_id'];
+
+    echo $sql;
+
+    mysql_query($sql, $connection);
+    header("Location: admin_mitglied.php");
+   
+
+  }
 
   //mysql_close($connection);
 
@@ -125,7 +146,7 @@
         <div class="panel-heading">Mitglied Bearbeiten</div>
           <div class="panel-body">
             
-            <form class="form-horizontal" id="mitglied_bearb" name="commentform" method="post" action="admin.php">
+            <form class="form-horizontal" id="mitglied_bearb" name="commentform" method="post">
             <div class="form-group">
 
              <label class="control-label col-md-4" for="name">Name</label>
@@ -161,7 +182,7 @@
 
             <div class="form-group">
               <div class="col-md-6">
-                <input type="submit" name="mitglied_speichern" class="btn btn-primary btn-xs">
+                <input type="submit" value="Speichern" name="mitglied_updaten" class="btn btn-primary btn-xs">
               </div>
             </div>
           </form>

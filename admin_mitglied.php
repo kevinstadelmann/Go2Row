@@ -127,13 +127,7 @@
           <a href="#" class="list-group-item">Reservationenverwalten</a>
           <a href="admin_boot.php" class="list-group-item">Bootsverwaltung</a>
           <a href="#" class="list-group-item">Bootsschaden verwalten</a>
-          <p>
-          Filter Möglichkeiten
-          Kalender
-          Nicht Abgeschlossene Ausfahrten auf einen Blick
-          Reservationen auf einen Blick
-          Suche nach Ausfahrten
-        </p>
+
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
