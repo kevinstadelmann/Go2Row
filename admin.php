@@ -123,9 +123,9 @@
       <!-- Seiten-Inhaltsverzeichnis -->
       <div class="col-sm-3" id="sidebar" role="navigation">
         <div class="list-group">
-          <a href="#" class="list-group-item active">Benutzerverwaltung</a>
+          <a href="admin_mitglied.php" class="list-group-item active">Benutzerverwaltung</a>
           <a href="#" class="list-group-item">Reservationenverwalten</a>
-          <a href="#" class="list-group-item">Bootsverwaltung</a>
+          <a href="admin_boot.php" class="list-group-item">Bootsverwaltung</a>
           <a href="#" class="list-group-item">Bootsschaden verwalten</a>
           <p>
           Filter Möglichkeiten

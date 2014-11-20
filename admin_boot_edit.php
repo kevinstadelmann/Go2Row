@@ -68,23 +68,20 @@
     if($name == "" || $kategorie == "" ){
       echo "Bitte einen Namen eingeben";
     }else{
-    	if($kategorie == "Leistungssport"){
+      if($kategorie == "Leistungssport"){
         $kategorie = 1;
 
       } 
-    $sql =  "INSERT INTO boot (b_name, kategorie_kategorie_id, schaden)";
-    $sql .= "VALUES ('".$_POST["name_txt"]."', '$kategorie', '0')";
+    $sql =  'UPDATE boot
+        SET b_name=".$_POST["name_txt"]."
+        SET kategorie_kategorie_id="$kategorie"
+        SET schaden="0"
+        WHERE boot_id=".$_POST["name_txt"]."';
 
       mysql_query($sql, $connection);
       
 
     }
-  }
-
-  // Boot Löschen
-  if(isset($_GET['action']) && $_GET['action'] == 'delete'){
-  mysql_query("DELETE FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['id'])."'");
-  header("Location: admin_boot.php");
   }
 
   //mysql_close($connection);
@@ -136,22 +133,11 @@
         </p>
 
 
-
-<!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span> Boot hinzufügen</a>
-<br></br>
-    <!-- Modal -->
-<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Boot erstellen</h4>
-   </div>
-    <div class="modal-body">
-
-
-          <form class="form-horizontal" id="boot_form" name="commentform" method="post" action="admin_boot.php">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Boot bearbeiten</div>
+          <div class="panel-body">
+            <p>
+              <form class="form-horizontal" id="boot_form" name="commentform" method="post" action="admin_boot.php">
             <div class="form-group">
 
              <label class="control-label col-md-4" for="name">Name</label>
@@ -184,32 +170,16 @@
               </div>
             </div>
           </form>
-        
-      </div><!-- End of Modal body -->
-    </div><!-- End of Modal content -->
-  </div><!-- End of Modal dialog -->
-</div><!-- End of Modal -->
+          </p>
+          </div>
 
-
-        <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
-
-        <table class="table table-striped">
-        <tr> <td><b> Name </b></td> <td><b> Kategorie </b></td> <td><b> Löschen </b></td></tr>
-        <?php
-          $auswahl_sql = "SELECT * FROM boot";
-          $boot = mysql_query($auswahl_sql);
-     
-          while($row = mysql_fetch_array($boot)){
-            echo"<tr>";
-            echo "<td>" . $row['b_name'] . "</td>";
-            echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
-            //echo "<td>" . $row['boot_id']."<a href='delete_boot.php?boot_id=".$row['boot_id']."'><span class='glyphicon glyphicon-fire delete'></span></a></td>";
-            echo "<td id=" . $row['boot_id']."><button type='button' class='btn btn-danger btn-sm delete-row'><span class='glyphicon glyphicon-fire'></span></button></td>";
-            echo "</tr>";
-           }
-        ?>
+  <!-- Table -->
+        <table class="table">
         </table>
-        
+      </div>
+
+
+    
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
 
@@ -218,30 +188,6 @@
     </footer>
   </div> <!-- container-->
 
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                 <h3 class="modal-title" id="myModalLabel">Bitte bestätigen</h3>
-
-            </div>
-            <div class="modal-body">
-                 <h4>Sind Sie sicher, dass sie diesen Datensatz löschen wollen?</h4>
-
-            </div>
-            <!--/modal-body-collapse -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="btnDelteYes" href="#">Ja</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
-            </div>
-            <!--/modal-footer-collapse -->
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
 
   
     <!-- Bootstrap core JavaScript
