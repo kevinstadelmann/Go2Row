@@ -168,12 +168,16 @@
                 <div class="col-md-6">           
                   <select name="kategorie_slc" size="1" class="form-control">
                     <?php
-                    $auswahl_sql = "SELECT kategorie FROM kategorie";
+                    $auswahl_sql = "SELECT kategorie FROM kategorie where kategorie_id !=".$edit_array['kategorie_kategorie_id'];
                     $kategorie = mysql_query($auswahl_sql);
                
                     while($row = mysql_fetch_array($kategorie)){
                     echo"<option>" . $row['kategorie'] . "</option>";
                     }
+
+                    $auswahl_sql = "SELECT kategorie FROM kategorie where kategorie_id =".$edit_array['kategorie_kategorie_id'];
+                    $kategorie = mysql_query($auswahl_sql);
+                    echo "<option selected>" . $kategorie['kategorie'] . "</option>";
 
                     ?>
                   </select>

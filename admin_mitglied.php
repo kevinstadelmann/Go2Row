@@ -141,8 +141,7 @@
 
 
 
-<!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Mitglied hinzufügen</a>
+
 
     <!-- Modal - Mitglieder hinzufügen-->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -201,85 +200,24 @@
   </div><!-- End of Modal dialog -->
 </div><!-- End of Modal -->
 
-<!-- Modal - Mitglieder bearbeiten-->
-<div id="myModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Mitglied erstellen</h4>
-   </div>
-    <div class="modal-body">
-
-          <?php
-          // bearbeiten
-          if( isset($_GET['action']) && $_GET['action'] == 'bearbeiten'){
-            $bearbeiten = mysql_query("SELECT * mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
-            $row = mysql_fetch_array($bearbeiten);
-          
-          //header("Location: admin.php");
-          }
-          ?>
 
 
-          <form class="form-horizontal" id="mitglied_bearb" name="commentform" method="post" action="admin_mitglied.php">
-            <div class="form-group">
-
-             <label class="control-label col-md-4" for="name">Name</label>
-              <div class="col-md-6">
-                <input type="text" class="form-control" id="name_txt" name="name_txt" placeholder="Name"/>
-              </div>
-            </div>
-          
-            <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Vorname</label>
-                <div class="col-md-6">
-                  <input type='text' class='form-control' id='vorname_txt' name='vorname_txt'/>
-                </div>
-            </div>
-            
-
-            <div class="form-group">
-              <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
-                <div class="col-md-6">           
-                  <select name="kategorie_slc" size="1" class="form-control">
-                    <?php
-                    $auswahl_sql = "SELECT kategorie FROM kategorie";
-                    $kategorie = mysql_query($auswahl_sql);
-               
-                    while($row = mysql_fetch_array($kategorie)){
-                    echo"<option>" . $row['kategorie'] . "</option>";
-                    }
-
-                    ?>
-                  </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-md-6">
-                <input type="submit" name="mitglied_speichern" class="btn btn-primary btn-xs">
-              </div>
-            </div>
-          </form>
-
-
-        
-      </div><!-- End of Modal body -->
-    </div><!-- End of Modal content -->
-  </div><!-- End of Modal dialog -->
-</div><!-- End of Modal -->
 
 
         <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
+      <div class="panel panel-primary">
+       <div class="panel-heading">Mitglieder Liste</div>
+
+               <!-- Button to trigger modal -->
+        </br> 
+        <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Mitglied hinzufügen</a>
 
         <table class="table table-striped">
         <tr> 
           <td><b> Name   </b></td>
           <td><b> Vorname</b></td>
           <td><b> Kategorie </b></td>
-          <td><b> Löschen </b></td>
-          <td><b> Bearbeiten </b></td>
+          <td><b></b></td>
         </tr>
         <?php
           $auswahl_sql = "SELECT * FROM mitglied";
@@ -293,12 +231,15 @@
             echo "<td>" . $row['vorname'] . "</td>";
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
             //echo "<td>" . $row['mitglied_id']."<a href='delete.php?action=hinzufuegen=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
-            echo "<td><a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
-            echo "<td><a href='admin_mitglied_edit.php?action=bearbeiten&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
+            echo "<td><a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a>";
+            echo " ";
+            echo "<a href='admin_mitglied_edit.php?action=bearbeiten&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
            }
         ?>
         </table>
+      </div>
+    </div>
         
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
