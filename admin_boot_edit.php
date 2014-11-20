@@ -59,29 +59,32 @@
 
    var_dump($_POST);
 
-  if(isset($_POST['boot_speichern'])){
+   // Form initialsieren
+   $edit_sql = mysql_query("SELECT * FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['id'])."'");
+   $edit_array = mysql_fetch_array($edit_sql);
+   
+   // bearbeitete Daten speichern
+   
 
-    $name = $_POST['name_txt'];
+   if(isset($_POST['boot_updaten'])){
     $kategorie = $_POST['kategorie_slc'];
-    // Formular-Eingabe überprüfen
-
-    if($name == "" || $kategorie == "" ){
-      echo "Bitte einen Namen eingeben";
-    }else{
-      if($kategorie == "Leistungssport"){
+ 
+    if($kategorie == "Leistungssport"){
         $kategorie = 1;
-
-      } 
-    $sql =  'UPDATE boot
-        SET b_name=".$_POST["name_txt"]."
-        SET kategorie_kategorie_id="$kategorie"
-        SET schaden="0"
-        WHERE boot_id=".$_POST["name_txt"]."';
-
-      mysql_query($sql, $connection);
-      
-
+    }else{
+      $kategorie = 2;
     }
+
+    $sql =  "UPDATE boot ";
+    $sql .= "SET b_name='".$_POST["boot_txt"]."',kategorie_kategorie_id=$kategorie ";
+    $sql .= "WHERE boot_id=".$edit_array['boot_id'];
+
+    echo $sql;
+
+    mysql_query($sql, $connection);
+    header("Location: admin_boot.php");
+   
+
   }
 
   //mysql_close($connection);
@@ -105,7 +108,7 @@
           <ul class="nav navbar-nav">
             <li> <a href="index.php">Logbuch</a></li>
             <li><a href="#about">Statistik</a></li>
-            <li class="active"><a href="admin.php">Admin</a></li>
+            <li class="active"><a href="admin_mitglied.php">Admin</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -121,6 +124,13 @@
           <a href="#" class="list-group-item">Reservationenverwalten</a>
           <a href="admin_boot.php" class="list-group-item active">Bootsverwaltung</a>
           <a href="#" class="list-group-item">Bootsschaden verwalten</a>
+          <p>
+          Filter Möglichkeiten
+          Kalender
+          Nicht Abgeschlossene Ausfahrten auf einen Blick
+          Reservationen auf einen Blick
+          Suche nach Ausfahrten
+        </p>
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
@@ -132,25 +142,23 @@
           </button>
         </p>
 
-
       <div class="panel panel-primary">
         <div class="panel-heading">Boot bearbeiten</div>
           <div class="panel-body">
-            <p>
-              <form class="form-horizontal" id="boot_form" name="commentform" method="post" action="admin_boot.php">
+            
+            <form class="form-horizontal" id="mitglied_bearb" name="commentform" method="post">
             <div class="form-group">
 
              <label class="control-label col-md-4" for="name">Name</label>
               <div class="col-md-6">
-                <input type="text" class="form-control" id="name_txt" name="name_txt" placeholder="Name"/>
+                <input type="text" value="<?php echo $edit_array['b_name']; ?>" class="form-control" id="boot_txt" name="boot_txt" placeholder="Name"/>
               </div>
             </div>
-          
 
             <div class="form-group">
               <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
                 <div class="col-md-6">           
-                  <select name="kategorie_slc" size="5" class="form-control">
+                  <select name="kategorie_slc" size="1" class="form-control">
                     <?php
                     $auswahl_sql = "SELECT kategorie FROM kategorie";
                     $kategorie = mysql_query($auswahl_sql);
@@ -166,20 +174,17 @@
 
             <div class="form-group">
               <div class="col-md-6">
-                <input type="submit" name="boot_speichern" class="btn btn-primary btn-xs">
+                <input type="submit" value="Speichern" name="boot_updaten" class="btn btn-primary btn-xs">
               </div>
             </div>
           </form>
-          </p>
-          </div>
 
-  <!-- Table -->
-        <table class="table">
-        </table>
+          </div>
       </div>
 
 
-    
+
+        
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
 
@@ -187,7 +192,6 @@
       <p>© Company 2014</p>
     </footer>
   </div> <!-- container-->
-
 
   
     <!-- Bootstrap core JavaScript
@@ -198,33 +202,8 @@
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js" type="text/javascript"></script>
 
-      <script>
-// delete row
-$("table").on('click', 'button.delete-row', function(e){
-  e.preventDefault();
-  var id = $(this).closest('td').attr('id');
-  $('#deleteModal').data('id', id).modal('show');
-  $('#editModal input[type="name"]').text()
-});
+    <script>
 
-$('#btnDelteYes').click(function () {
-
-    var id = $('#deleteModal').data('id');
-    
-    if(id > 0){
-      $.ajax({
-        type: "POST",
-        url: document.URL+'?action=delete&id='+id,
-        async: false,
-        data: {}
-      });
-    }
-    $('#deleteModal').modal('hide');
-
-     $('table td[id=' + id + ']').closest('tr').remove();
-    //location.reload();
-
-});
 </script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

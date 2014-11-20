@@ -194,7 +194,12 @@
         <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
 
         <table class="table table-striped">
-        <tr> <td><b> Name </b></td> <td><b> Kategorie </b></td> <td><b> Löschen </b></td></tr>
+        <tr> 
+        <td><b> Name </b></td> 
+        <td><b> Kategorie </b></td> 
+        <td><b> Löschen </b></td>
+        <td><b> Bearbeiten </b></td>
+        </tr>
         <?php
           $auswahl_sql = "SELECT * FROM boot";
           $boot = mysql_query($auswahl_sql);
@@ -205,6 +210,7 @@
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
             //echo "<td>" . $row['boot_id']."<a href='delete_boot.php?boot_id=".$row['boot_id']."'><span class='glyphicon glyphicon-fire delete'></span></a></td>";
             echo "<td id=" . $row['boot_id']."><button type='button' class='btn btn-danger btn-sm delete-row'><span class='glyphicon glyphicon-fire'></span></button></td>";
+            echo "<td><a href='admin_boot_edit.php?action=bearbeiten&id=".$row['boot_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
             echo "</tr>";
            }
         ?>
