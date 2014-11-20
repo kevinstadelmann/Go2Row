@@ -240,7 +240,7 @@
             <div class="form-group">
               <label class="control-label col-md-4" for="vorname_txt">Vorname</label>
                 <div class="col-md-6">
-                  <?php echo "<input type='text' value='".$row['vorname']."' class='form-control' id='vorname_txt' name='vorname_txt'/>";?>
+                  <input type='text' class='form-control' id='vorname_txt' name='vorname_txt'/>
                 </div>
             </div>
             
@@ -284,9 +284,8 @@
           <td><b> Name   </b></td>
           <td><b> Vorname</b></td>
           <td><b> Kategorie </b></td>
-          <td><b>Löschen Variante 1 </b></td>
-          <td><b>Löschen Variante 2 </b></td>
-          <td><b>Bearbeiten </b></td>
+          <td><b> Löschen </b></td>
+          <td><b> Bearbeiten </b></td>
         </tr>
         <?php
           $auswahl_sql = "SELECT * FROM mitglied";
@@ -301,7 +300,7 @@
             echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
             //echo "<td>" . $row['mitglied_id']."<a href='delete.php?action=hinzufuegen=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
             echo "<td>" . $row['mitglied_id']."<a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
-            echo "<td>" . $row['mitglied_id']."<a href='?action=bearbeiten&id=".$row['mitglied_id']."'><a href='#myModal2' role='button' class='btn btn-default btn-sm' data-toggle='modal'></a></td>";
+            echo "<td>" . $row['mitglied_id']."<a href='?action=bearbeiten&id=".$row['mitglied_id']."'><a href='#myModal2' role='button' class='btn btn-default btn-sm edit' data-toggle='modal'></a></td>";
             echo "</tr>";
            }
         ?>

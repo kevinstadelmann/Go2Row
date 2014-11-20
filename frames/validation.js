@@ -27,7 +27,7 @@ fields: {
     kategorie_slc: {
       validators: {
         notEmpty: {
-          message: "Bitte eine Kategorie ausw‰hlen!"
+          message: "Bitte eine Kategorie ausw√§hlen!"
               } // notEmpty
             } // validators
           },  // kategorie
@@ -79,7 +79,7 @@ fields: {
     kategorie_slc: {
       validators: {
         notEmpty: {
-          message: "Bitte eine Kategorie ausw‰hlen!"
+          message: "Bitte eine Kategorie ausw√§hlen!"
         } // notEmpty
       } // validators
     },  // kategorie
@@ -89,3 +89,8 @@ fields: {
 $('#boot_form').on('shown.bs.modal', function() {
 $('#boot_form').bootstrapValidator('resetForm', true);
 });
+
+
+$('.edit').click(function() {
+  $(this)
+})
