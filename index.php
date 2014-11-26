@@ -14,6 +14,8 @@
 
     <!-- Custom styles for this template -->
     <link href="offcanvas.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/inputosaurus.css" rel="stylesheet">
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -54,30 +56,18 @@
    }
 
    var_dump($_POST);
-
   
-if(isset($_POST['test'])){
-
-
-
-}
-
-
-
-
   if(isset($_POST['ausfahrt_speichern'])){
 
-    $boot = $_POST['datum_txt'];
-    echo $boot;
-    // Formular-Eingabe überprüfen
-    if($boot == ""){
-    }else{
+    $datum = date("20y-m-d");
+    $abfahrt = $_POST['abfahrt_txt'] . ":00";
+    $abfahrt = $_POST['ankunft_txt'] . ":00";
 
-    $sql =  "INSERT INTO m_ausfahrt (datum, steuermann, km, ruderziel, abfahrt, ankunft, bemerkung, boot_boot_id)";
-    $sql .= "VALUES ('".$_POST["datum_txt"]."','".$_POST["steuermann_txt"]."','".$_POST["km_txt"]."','".$_POST["ruderziel_txt"]."','".$_POST["abfahrt_txt"]."','".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_lst"]."','".$_POST["boot_txt"]."')";
+    $sql =  "INSERT INTO `m_ausfahrt` (`m_ausfahrt_id`, `datum`, `mitglied_id`, `steuermann`, `km`, `ruderziel`, `abfahrt`, `ankunft`, `bemerkung`, `boot_boot_id`)";
+    $sql .= "VALUES (NULL, '$datum', '0', '".$_POST["name_txt"]."', '".$_POST["km_txt"]."', '".$_POST["ruderziel_txt"]."', '".$_POST["abfahrt_txt"]."', '".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_txt"]."', '44')";
+
 
       mysql_query($sql,$connection);
-    }
   }
 
 
@@ -85,6 +75,13 @@ if(isset($_POST['test'])){
 
 ?>
 
+            <script language="javascript" type="text/javascript">
+              var d = new Date();
+              var datum = d.getDate()+"."+d.getMonth()+"."+(d.getYear()+1900);
+              $.post('index.php', {variable: datum});
+            </script>
+
+    
   <!-- NAVIGATION -->
   <nav class="navbar navbar-default navbar-inverse" role="navigation">
       <div class="container">
@@ -139,10 +136,14 @@ if(isset($_POST['test'])){
         <!-- Jumbotron
         <div class="jumbotron">
           <h1>Seeclub Luzern</h1>
-          <p>Am 01.10.2014 wurden 199km gerudert</p>
+          <p>Am 
+            <script language="javascript" type="text/javascript">
+              var d = new Date();
+              document.write(d.getDate()+"."+d.getMonth()+"."+(d.getYear()+1900));
+            </script>
+          wurden 199km gerudert</p>
         </div
       -->
-
 
 
 <!-- Button to trigger modal --> 
@@ -156,12 +157,28 @@ if(isset($_POST['test'])){
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title">Ausfahrt eintragen</h4>
    </div>
+
+
     <div class="modal-body">
 
-
           <form class="form-horizontal" id="ausfahrt_form" name="commentform" method="post" action="index.php">
+            
             <div class="form-group">
+              <label class="control-label col-md-4" for="datum_txt">Datum</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="datum_txt" name="datum_txt" value="<?=date("d.m.Y")?>" readonly/>
+                </div>
+            </div>
 
+               <div class="form-group">
+             <label class="control-label col-md-4" for="boot">Boot</label>
+              <div class="col-md-6">
+      <input type="text" value="" id="boot" div class="form-control" />
+        <a href="javascript:void(0);"></a>
+      </div>
+    </div>
+
+            <div class="form-group">
              <label class="control-label col-md-4" for="boot">Boot</label>
               <div class="col-md-6">
                 <input type="text" class="form-control" id="boot_txt" name="boot_txt" placeholder="Boot"/>
@@ -171,31 +188,48 @@ if(isset($_POST['test'])){
             <div class="form-group">
               <label class="control-label col-md-4" for="name_txt">Name</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" id="vorname_txt" name="vorname_txt" placeholder="Vorname"/>
+                  <input type="text" class="form-control" id="name_txt" name="name_txt" placeholder="Name"/>
                 </div>
             </div>
             
+            <div class="form-group">
+             <label class="control-label col-md-4" for="boot">Kilometer</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="km_txt" name="km_txt" placeholder="km"/>
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label class="control-label col-md-4" for="ruderziel_txt">Ruderziel</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="ruderziel_txt" name="ruderziel_txt" placeholder="Ruderziel"/>
+                </div>
+            </div>
 
             <div class="form-group">
-              <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
-                <div class="col-md-6">           
-                  <select name="kategorie_slc" size="5" class="form-control">
-                    <?php
-                    $auswahl_sql = "SELECT kategorie FROM kategorie";
-                    $kategorie = mysql_query($auswahl_sql);
-               
-                    while($row = mysql_fetch_array($kategorie)){
-                    echo"<option>" . $row['kategorie'] . "</option>";
-                    }
+            <label class="control-label col-md-4" for="abfahrt_txt">Abfahrt</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="abfahrt_txt" name="abfahrt_txt" placeholder="hh:mm"/>
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label class="control-label col-md-4" for="ankunft_txt">Ankunft</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="ankunft_txt" name="ankunft_txt" placeholder="hh:mm"/>
+                </div>
+            </div>
 
-                    ?>
-                  </select>
+            <div class="form-group">
+              <label class="control-label col-md-4" for="bemerkung_txt">Bemerkung</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="bemerkung_txt" name="bemerkung_txt" placeholder="..."/>
                 </div>
             </div>
 
             <div class="form-group">
               <div class="col-md-6">
-                <input type="submit" name="mitglied_speichern" class="btn btn-primary btn-xs">
+                <input type="submit" name="ausfahrt_speichern" class="btn btn-primary btn-xs">
               </div>
             </div>
           </form>
@@ -270,6 +304,33 @@ if(isset($_POST['test'])){
               <div class="panel-body">
                 <table class="table table-striped">
                   <tr class="success">
+
+        <tr> 
+        <td><b> Boot </b></td> 
+        <td><b> Steuernmann </b></td> 
+        <td><b> KM </b></td>
+        <td><b> Ruderziel </b></td>
+        <td><b> Abfahrt </b></td>
+        <td><b> Ankunft </b></td>
+        </tr>
+        <?php
+          $datum = date("20y-m-d");
+          $auswahl_sql = "SELECT * FROM m_ausfahrt";
+          $ausfahrt = mysql_query($auswahl_sql);
+     
+          while($row = mysql_fetch_array($ausfahrt)){
+            echo"<tr>";
+            echo "<td>" . $row['datum'] . "</td>";
+            echo "<td>" . $row['boot_id'] . "</td>";
+            echo "<td>" . $row['boot_id'] . "</td>";
+            echo "<td>" . $row['boot_id'] . "</td>";
+
+            echo "</tr>";
+           }
+        ?>
+
+
+
                    </tr>
 
                 </table>
@@ -288,7 +349,8 @@ if(isset($_POST['test'])){
     </footer>
   </div> <!-- container-->
 
-  
+
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -302,7 +364,48 @@ if(isset($_POST['test'])){
 
     <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
     <script src="frames/validation.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   
+     <script src="bower_components/bootstrap/js/inputosaurus.js"></script>
+
+  
+       <?php
+          $auswahl_sql = "SELECT b_name FROM boot";
+          $boot = mysql_query($auswahl_sql);
+     
+     $array = array();
+         while($row = mysql_fetch_array($boot)){
+    array_push($array, $row['b_name']);
+         }
+
+
+    
+        ?>
+
+
+
+
+
+
+<script>
+    $('#boot').inputosaurus({
+      width : '350px',
+      autoCompleteSource : <?php print(json_encode($array)); ?>,
+      activateFinalResult : true,
+      change : function(ev){
+        $('#widget2_reflect').val(ev.target.value);
+      }
+    });
+
+    $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+    prettyPrint();
+  </script>
+
+
+
+
 
   </body>
 </html>
