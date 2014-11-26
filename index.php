@@ -111,7 +111,7 @@ if(isset($_POST['test'])){
   <!-- HAUPTINHALT -->
   <div class="container">
     <div class="row">
-      <!-- Seiten-Inhaltsverzeichnis
+      <!-- Seiten-Inhaltsverzeichnis -->
       <div class="col-sm-3" id="sidebar" role="navigation">
         <div class="list-group">
           <a href="#" class="list-group-item active">Link</a>
@@ -127,7 +127,7 @@ if(isset($_POST['test'])){
         </p>
         </div>
       </div><!--Seiten-Inhaltsverzeichnis 
-    -->
+    
       <!-- Hauptinhalt - Rechts -->
       <div class="col-xs-12 col-sm-9">
         <p class="pull-right visible-xs">
@@ -136,11 +136,12 @@ if(isset($_POST['test'])){
           </button>
         </p>
 
-        <!-- Jumbotron -->
+        <!-- Jumbotron
         <div class="jumbotron">
           <h1>Seeclub Luzern</h1>
           <p>Am 01.10.2014 wurden 199km gerudert</p>
         </div
+      -->
 
 
 
@@ -206,11 +207,12 @@ if(isset($_POST['test'])){
 
 
 
+    </br>
 
         <!-- Colapse 1-3 -->
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
           <!-- Colapse 1 -->
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -232,12 +234,12 @@ if(isset($_POST['test'])){
           </div> <!-- Colapse 1 --> 
 
           <!-- Colapse 2 -->    
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingTwo">
               <h4 class="panel-title">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                 Aktuelle Ausfahrten
-                <span class="badge">14</span> 
+                <span style="float: right" class="badge">14</span> 
                 </a>
               </h4>
             </div>
@@ -255,7 +257,7 @@ if(isset($_POST['test'])){
           </div><!-- Colapse 2 -->
 
           <!-- Colapse 3 -->
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingThree">
               <h4 class="panel-title">
               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -277,6 +279,9 @@ if(isset($_POST['test'])){
         </div> <!-- Colapse 1-3 -->
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
+
+
+
 
     <footer>
       <p>© Company 2014</p>

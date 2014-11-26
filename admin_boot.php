@@ -41,8 +41,7 @@
 
   $connection = mysql_connect($server, $user, $pw);
 
-  if (!$connection)
-   {
+  if (!$connection){
      die("Konnte die Datenbank nicht öffnen.
          Fehlermeldung: ". mysql_error());
    }
@@ -52,42 +51,35 @@
   //Dankenbankauswahl
   $db = mysql_select_db($database, $connection);
 
-  if (!$db)
-   {
+  if (!$db){
     echo "Konnte die Datenbank nicht auswählen.";
-   }
-
+   }  
    var_dump($_POST);
 
+   // Wenn Boot-Speichern gedrückt wurde
   if(isset($_POST['boot_speichern'])){
 
-    $name = $_POST['name_txt'];
+    // Ausgewählte Kategorie in Variable speichern
     $kategorie = $_POST['kategorie_slc'];
-    // Formular-Eingabe überprüfen
 
-    if($name == "" || $kategorie == "" ){
-      echo "Bitte einen Namen eingeben";
-    }else{
-    	if($kategorie == "Leistungssport"){
-        $kategorie = 1;
+    //  ID der Kategorie suchen und in Variable speichern
+    $kat_sql = mysql_query("SELECT kategorie_id FROM kategorie where kategorie='$kategorie'");
+    $kat_arr = mysql_fetch_array($kat_sql);
+    $kat_id = $kat_arr['kategorie_id'];
 
-      } 
+    // Datensatz in die DB speichern
     $sql =  "INSERT INTO boot (b_name, kategorie_kategorie_id, schaden)";
-    $sql .= "VALUES ('".$_POST["name_txt"]."', '$kategorie', '0')";
-
-      mysql_query($sql, $connection);
-      
+    $sql .= "VALUES ('".$_POST["name_txt"]."', $kat_id, '0')";
+    echo $sql;
+    mysql_query($sql, $connection);
 
     }
-  }
-
+  
   // Boot Löschen
   if(isset($_GET['action']) && $_GET['action'] == 'delete'){
-  mysql_query("DELETE FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['id'])."'");
-  header("Location: admin_boot.php");
+    mysql_query("DELETE FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['id'])."'");
+    header("Location: admin_boot.php");
   }
-
-  //mysql_close($connection);
 
 ?>
 
@@ -137,9 +129,7 @@
 
 
 
-<!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span> Boot hinzufügen</a>
-<br></br>
+
     <!-- Modal -->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
  <div class="modal-dialog">
@@ -164,7 +154,7 @@
             <div class="form-group">
               <label class="control-label col-md-4" for="kategorie_slc">Kategorie</label>
                 <div class="col-md-6">           
-                  <select name="kategorie_slc" size="5" class="form-control">
+                  <select name="kategorie_slc" size="1" class="form-control">
                     <?php
                     $auswahl_sql = "SELECT kategorie FROM kategorie";
                     $kategorie = mysql_query($auswahl_sql);
@@ -191,31 +181,48 @@
 </div><!-- End of Modal -->
 
 
-        <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
+        
+      <div class="panel panel-primary">
+       <div class="panel-heading">
+        Boot Liste
+          <!-- Button to trigger modal -->   
+          <a href="#myModal" role="button" style="float: right;color: #FFFFFF" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign"></span>
+            Boot hinzufügen
+          </a> 
 
+       </div>
+
+       <!-- Bereits enthaltene Boote in Tabelle anzeigen -->
         <table class="table table-striped">
         <tr> 
         <td><b> Name </b></td> 
         <td><b> Kategorie </b></td> 
-        <td><b> Löschen </b></td>
-        <td><b> Bearbeiten </b></td>
+        <td><b>
+
+        </b></td>
+
+        </br>
+
+
         </tr>
         <?php
-          $auswahl_sql = "SELECT * FROM boot";
+          $auswahl_sql = "SELECT b.boot_id,b.b_name, k.kategorie FROM boot b, kategorie k WHERE b.kategorie_kategorie_id = k.kategorie_id";
           $boot = mysql_query($auswahl_sql);
      
           while($row = mysql_fetch_array($boot)){
             echo"<tr>";
             echo "<td>" . $row['b_name'] . "</td>";
-            echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
+            echo "<td>" . $row['kategorie'] . "</td>";
             //echo "<td>" . $row['boot_id']."<a href='delete_boot.php?boot_id=".$row['boot_id']."'><span class='glyphicon glyphicon-fire delete'></span></a></td>";
-            echo "<td id=" . $row['boot_id']."><button type='button' class='btn btn-danger btn-sm delete-row'><span class='glyphicon glyphicon-fire'></span></button></td>";
-            echo "<td><a href='admin_boot_edit.php?action=bearbeiten&id=".$row['boot_id']."'><span class='glyphicon glyphicon-minus'></span></a></td>";
+            echo " ";
+            echo "<td id=" . $row['boot_id']."><button type='button' class='delete-row'><span class='glyphicon glyphicon-remove-circle'></span></button>";
+            echo "<a href='admin_boot_edit.php?action=bearbeiten&id=".$row['boot_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
            }
         ?>
         </table>
-        
+        </div>
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
 

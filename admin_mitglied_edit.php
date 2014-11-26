@@ -63,32 +63,24 @@
    $edit_sql = mysql_query("SELECT * FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
    $edit_array = mysql_fetch_array($edit_sql);
    
-   // bearbeitete Daten speichern
-   
-
+   // Wenn Speichern Button gedrück wird - Mitglied Updaten
    if(isset($_POST['mitglied_updaten'])){
+
+    // Kategorie-Text aus Auswahlliste auslesen
     $kategorie = $_POST['kategorie_slc'];
- 
-    if($kategorie == "Leistungssport"){
-        $kategorie = 1;
-    }else{
-      $kategorie = 2;
-    }
 
+    // ID der Kategorie suchen und in Variable speichern
+    $kat_sql = mysql_query("SELECT kategorie_id FROM kategorie where kategorie='$kategorie'");
+    $kat_arr = mysql_fetch_array($kat_sql);
+    $kat_id = $kat_arr['kategorie_id'];
+
+    // Mitglied mit den Änderungen speichern
     $sql =  "UPDATE mitglied ";
-    $sql .= "SET name='".$_POST["name_txt"]."',vorname='".$_POST["vorname_txt"]."',kategorie_kategorie_id=$kategorie ";
+    $sql .= "SET name='".$_POST["name_txt"]."',vorname='".$_POST["vorname_txt"]."',kategorie_kategorie_id=$kat_id ";
     $sql .= "WHERE mitglied_id=".$edit_array['mitglied_id'];
-
-    echo $sql;
-
     mysql_query($sql, $connection);
     header("Location: admin_mitglied.php");
-   
-
   }
-
-  //mysql_close($connection);
-
 ?>
 
   <!-- NAVIGATION -->
@@ -168,17 +160,21 @@
                 <div class="col-md-6">           
                   <select name="kategorie_slc" size="1" class="form-control">
                     <?php
+
+                    // Bereits enthaltene Kategorie selektionieren
+                    $auswahl_sql = "SELECT kategorie FROM kategorie where kategorie_id =".$edit_array['kategorie_kategorie_id'];
+                    $kategorie = mysql_query($auswahl_sql);
+                    $row = mysql_fetch_array($kategorie);
+                    echo "<option selected>" . $row['kategorie'] . "</option>";
+                  
+                    // Alle anderen Kategorien zur Auswahl geben
                     $auswahl_sql = "SELECT kategorie FROM kategorie where kategorie_id !=".$edit_array['kategorie_kategorie_id'];
                     $kategorie = mysql_query($auswahl_sql);
                
                     while($row = mysql_fetch_array($kategorie)){
-                    echo"<option>" . $row['kategorie'] . "</option>";
+                      echo"<option>" . $row['kategorie'] . "</option>";
                     }
-
-                    $auswahl_sql = "SELECT kategorie FROM kategorie where kategorie_id =".$edit_array['kategorie_kategorie_id'];
-                    $kategorie = mysql_query($auswahl_sql);
-                    echo "<option selected>" . $kategorie['kategorie'] . "</option>";
-
+                    
                     ?>
                   </select>
                 </div>

@@ -41,54 +41,41 @@
 
   $connection = mysql_connect($server, $user, $pw);
 
-  if (!$connection)
-   {
+  if (!$connection){
      die("Konnte die Datenbank nicht öffnen.
          Fehlermeldung: ". mysql_error());
    }
-
   echo "Erfolgreich zur Datenbank verbunden!";
 
   //Dankenbankauswahl
   $db = mysql_select_db($database, $connection);
 
-  if (!$db)
-   {
+  if (!$db){
     echo "Konnte die Datenbank nicht auswählen.";
    }
-
    var_dump($_POST);
 
+  // Wenn Mitglied speichern gedrückt wurde - Mitglied hinzufügen
   if(isset($_POST['mitglied_speichern'])){
 
-    $name = $_POST['name_txt'];
     $kategorie = $_POST['kategorie_slc'];
-    // Formular-Eingabe überprüfen
 
-    if($name == "" || $kategorie == "" ){
-      echo "Bitte einen Namen eingeben";
-    }else{
-      if($kategorie == "Leistungssport"){
-        $kategorie = 1;
-      }
+    // ID der Kategorie suchen und in Variable speichern
+    $kat_sql = mysql_query("SELECT kategorie_id FROM kategorie where kategorie='$kategorie'");
+    $kat_arr = mysql_fetch_array($kat_sql);
+    $kat_id = $kat_arr['kategorie_id'];
 
-
+    // Datensatz in die DB speichern
     $sql =  "INSERT INTO mitglied (name,vorname,kategorie_kategorie_id)";
-    $sql .= "VALUES ('".$_POST["name_txt"]."','".$_POST["vorname_txt"]."', $kategorie)";
-
-      mysql_query($sql, $connection);
+    $sql .= "VALUES ('".$_POST["name_txt"]."','".$_POST["vorname_txt"]."', $kat_id)";
+    mysql_query($sql, $connection);
     }
-  }
 
   // Benutzer Löschen
   if(isset($_GET['action']) && $_GET['action'] == 'delete'){
-  mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
-  //header("Location: admin.php");
+    mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
+    //header("Location: admin.php");
   }
-
-
-  
-
 
   //mysql_close($connection);
 
@@ -201,37 +188,71 @@
 </div><!-- End of Modal -->
 
 
+<!-- Modal zum Löschen bestätigen -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h3 class="modal-title" id="myModalLabel">Bitte bestätigen</h3>
+
+            </div>
+            <div class="modal-body">
+                 <h4>Sind Sie sicher, dass sie diesen Datensatz löschen wollen?</h4>
+
+            </div>
+            <!--/modal-body-collapse -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelteYes" href="#">Ja</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+            </div>
+            <!--/modal-footer-collapse -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 
-        <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
+
+
+      <!-- HAUPTINHALT RECHTS -->
       <div class="panel panel-primary">
-       <div class="panel-heading">Mitglieder Liste</div>
+       <div class="panel-heading">
+        Mitglieder Liste
 
-               <!-- Button to trigger modal -->
-        </br> 
-        <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Mitglied hinzufügen</a>
-
+        <!-- Button to trigger modal -->
+            <a href="#myModal"  role="button" style="float: right;color: #FFFFFF" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign"></span> Mitglied hinzufügen</a>
+          </b></td>
+        
+        </div>
+        </br>
+       <!-- Bereits enthaltene Mitglieder in Tabelle anzeigen -->
         <table class="table table-striped">
         <tr> 
           <td><b> Name   </b></td>
           <td><b> Vorname</b></td>
           <td><b> Kategorie </b></td>
-          <td><b></b></td>
+          <td><b>
+            
         </tr>
+
         <?php
-          $auswahl_sql = "SELECT * FROM mitglied";
+          $auswahl_sql = "SELECT m.mitglied_id,m.name, m.vorname, k.kategorie FROM mitglied m, kategorie k WHERE m.kategorie_kategorie_id = k.kategorie_id";
           $mitglieder = mysql_query($auswahl_sql);
          
      
           while( $row = mysql_fetch_array($mitglieder)){
-            $mitglied_id = $row[0];
             echo"<tr>";
             echo "<td>" . $row['name'] . "</td>";
             echo "<td>" . $row['vorname'] . "</td>";
-            echo "<td>" . $row['kategorie_kategorie_id'] . "</td>";
+            echo "<td>" . $row['kategorie'] . "</td>";
             //echo "<td>" . $row['mitglied_id']."<a href='delete.php?action=hinzufuegen=".$row['mitglied_id']."'><span class='glyphicon glyphicon-fire'></span></a></td>";
-            echo "<td><a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a>";
+            // altes löschenecho "<td><a href='?action=delete&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-minus'></span></a>";
+            echo "<td id=" . $row['mitglied_id']."><button type='button' class='delete-row'><span class='glyphicon glyphicon-remove-circle'></span></button>";
             echo " ";
             echo "<a href='admin_mitglied_edit.php?action=bearbeiten&id=".$row['mitglied_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
@@ -259,8 +280,34 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js" type="text/javascript"></script>
 
     <script>
+// delete row
+$("table").on('click', 'button.delete-row', function(e){
+  e.preventDefault();
+  var id = $(this).closest('td').attr('id');
+  $('#deleteModal').data('id', id).modal('show');
+  $('#editModal input[type="name"]').text()
+});
 
+$('#btnDelteYes').click(function () {
+
+    var id = $('#deleteModal').data('id');
+    
+    if(id > 0){
+      $.ajax({
+        type: "POST",
+        url: document.URL+'?action=delete&id='+id,
+        async: false,
+        data: {}
+      });
+    }
+    $('#deleteModal').modal('hide');
+
+     $('table td[id=' + id + ']').closest('tr').remove();
+    //location.reload();
+
+});
 </script>
+
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>

@@ -94,3 +94,5 @@ $('#boot_form').bootstrapValidator('resetForm', true);
 $('.edit').click(function() {
   $(this)
 })
+
+
