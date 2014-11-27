@@ -14,7 +14,7 @@
 
     <!-- Custom styles for this template -->
     <link href="offcanvas.css" rel="stylesheet">
-    <link href="bower_components/bootstrap/dist/css/inputosaurus.css" rel="stylesheet">
+    <link href="css/inputosaurus.css" rel="stylesheet">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -58,16 +58,58 @@
    var_dump($_POST);
   
   if(isset($_POST['ausfahrt_speichern'])){
-
+    
+    // Tabelle Ausfahrt mit einfach Daten füllen
     $datum = date("20y-m-d");
     $abfahrt = $_POST['abfahrt_txt'] . ":00";
     $abfahrt = $_POST['ankunft_txt'] . ":00";
 
-    $sql =  "INSERT INTO `m_ausfahrt` (`m_ausfahrt_id`, `datum`, `mitglied_id`, `steuermann`, `km`, `ruderziel`, `abfahrt`, `ankunft`, `bemerkung`, `boot_boot_id`)";
-    $sql .= "VALUES (NULL, '$datum', '0', '".$_POST["name_txt"]."', '".$_POST["km_txt"]."', '".$_POST["ruderziel_txt"]."', '".$_POST["abfahrt_txt"]."', '".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_txt"]."', '44')";
+    $sql =  "INSERT INTO `m_ausfahrt`(`m_ausfahrt_id`, `datum`, `mitglied_id`, `steuermann`, `km`, `ruderziel`, `abfahrt`, `ankunft`, `bemerkung`, `boot_boot_id`)";
+    $sql .= "VALUES (NULL, '$datum', '0', '".$_POST["steuermann_txt"]."', '".$_POST["km_txt"]."', '".$_POST["ruderziel_txt"]."', '".$_POST["abfahrt_txt"]."', '".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_txt"]."', '44')";
+
+    mysql_query($sql,$connection);
+
+    // Tabele Ausfahrt mit der Mannschaft befüllen
+
+    $last_insert = mysql_insert_id();
+    // echo $last_insert;
+    $array = explode(",", $_POST['mannschaft_txt']);
+    print_r($array);
+    $ms_array = serialize($array);
 
 
-      mysql_query($sql,$connection);
+    for($i=0;$i<count($ms_array);$i++) {
+      echo $ms_array;
+
+      // Mitglied_id abfragen
+      //$steuermann = explode(",", $_POST['mannschaft_txt']);
+      //$mitglied_id = mysql_query("SELECT `mitglied_id` FROM `mitglied` WHERE ( name = 'Theivendram') AND ( vorname = 'Aathavan' )");
+
+      $ms_sql =  "UPDATE `m_ausfahrt` SET `steuermann` = '$ms_array' WHERE m_ausfahrt_id = '$last_insert'";
+      mysql_query($ms_sql,$connection);
+    }
+  
+    // UPDATE `m_ausfahrt` SET `mitglied_id`=[value-3] WHERE $last_insert
+
+    // while($row = mysql_fetch_array($mannschaft_array)){
+    //   $sql_mannschaft =  "INSERT INTO `m_ausfahrt` (`mitglied_id`)";
+    //   $sql .= "VALUES ('$row')";;
+    // }
+
+
+
+    // Schnittstellentabelle Mitglied-Ausfahrt befüllen
+
+    // $ausfahrt_id = "SELECT m_ausfahrt_id FROM m_ausfahrt WHERE "
+    // $ms_array = explode(",", $_POST['mannschaft_txt']);
+    // print_r($ms_array);
+  
+
+
+
+    // $sql =  "INSERT INTO `mitglied_has_m_ausfahrt` (`mitglied_mitglied_id`, `m_ausfahrt_m_ausfahrt_id`)";
+    // $sql .= "VALUES ('')";
+
   }
 
 
@@ -93,12 +135,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Go2Row</a>
+          <a class="navbar-brand" href="index.php">Go2Row</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Logbuch</a></li>
-            <li><a href="#about">Statistik</a></li>
+            <li class="active"><a href="index.php">Logbuch</a></li>
+            <li><a href="statistik.php">Statistik</a></li>
             <li><a href="admin_mitglied.php">Admin</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
@@ -148,7 +190,7 @@
 
 <!-- Button to trigger modal --> 
     <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
-
+</br>
     <!-- Modal -->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
  <div class="modal-dialog">
@@ -171,29 +213,31 @@
             </div>
 
                <div class="form-group">
-             <label class="control-label col-md-4" for="boot">Boot</label>
+             <label class="control-label col-md-4" for="boot_txt">Boot</label>
               <div class="col-md-6">
-      <input type="text" value="" id="boot" div class="form-control" />
-        <a href="javascript:void(0);"></a>
+      <input type="text" value="" id="boot_txt" name="boot_txt" div class="form-control" placeholder="Boot suchen"/>
       </div>
     </div>
 
-            <div class="form-group">
-             <label class="control-label col-md-4" for="boot">Boot</label>
-              <div class="col-md-6">
-                <input type="text" class="form-control" id="boot_txt" name="boot_txt" placeholder="Boot"/>
-              </div>
-            </div>
-          
-            <div class="form-group">
-              <label class="control-label col-md-4" for="name_txt">Name</label>
+                      <div class="form-group">
+              <label class="control-label col-md-4" for="name_txt">Steuermann</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" id="name_txt" name="name_txt" placeholder="Name"/>
+                <input type="text" class="form-control" id="steuermann_txt" name="steuermann_txt" placeholder="Mitglied suchen"/>
+                  <!-- <input type="text" class="form-control" id="tokenfield"/> -->
+                </div>
+            </div>
+
+
+            <div class="form-group">
+              <label class="control-label col-md-4" for="mannschaft_txt">Mannschaft</label>
+                <div class="col-md-6">
+                <input type="text" class="form-control" id="mannschaft_txt" name="mannschaft_txt" placeholder="Mitglied suchen"/>
+                  <!-- <input type="text" class="form-control" id="tokenfield"/> -->
                 </div>
             </div>
             
             <div class="form-group">
-             <label class="control-label col-md-4" for="boot">Kilometer</label>
+             <label class="control-label col-md-4" for="km_txt">Kilometer</label>
               <div class="col-md-6">
                 <input type="text" class="form-control" id="km_txt" name="km_txt" placeholder="km"/>
               </div>
@@ -363,34 +407,29 @@
     <script src="offcanvas.js"></script>
 
     <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
-    <script src="frames/validation.js"></script>
+    <script src="js/validation.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   
-     <script src="bower_components/bootstrap/js/inputosaurus.js"></script>
+     <script src="js/inputosaurus.js"></script>
 
+
+
+<!-- Autocomplete Boot -->
   
-       <?php
-          $auswahl_sql = "SELECT b_name FROM boot";
-          $boot = mysql_query($auswahl_sql);
+<?php
+  $auswahl_sql = "SELECT b_name FROM boot";
+  $boot = mysql_query($auswahl_sql);
      
-     $array = array();
-         while($row = mysql_fetch_array($boot)){
+  $array = array();
+  while($row = mysql_fetch_array($boot)){
     array_push($array, $row['b_name']);
-         }
-
-
-    
-        ?>
-
-
-
-
-
+  }
+?>
 
 <script>
-    $('#boot').inputosaurus({
-      width : '350px',
+    $('#boot_txt').inputosaurus({
+      width : '270px',
       autoCompleteSource : <?php print(json_encode($array)); ?>,
       activateFinalResult : true,
       change : function(ev){
@@ -404,7 +443,73 @@
   </script>
 
 
+<!-- Autocomplete Steuermann -->
 
+<?php
+  $auswahl_sql = "SELECT name, vorname FROM mitglied";
+  $boot = mysql_query($auswahl_sql);
+     
+  $array = array();
+  while($row = mysql_fetch_array($boot)){
+    array_push($array, $row['name'] . " " . $row['vorname']);
+  }
+?>
+
+<script>
+    $('#steuermann_txt').inputosaurus({
+      width : '270px',
+      autoCompleteSource : <?php print(json_encode($array)); ?>,
+      activateFinalResult : true,
+      change : function(ev){
+        $('#widget2_reflect').val(ev.target.value);
+      }
+    });
+
+    $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+    prettyPrint();
+  </script>
+
+
+<!-- Autocomplete Mannschaft -->
+
+<?php
+  $auswahl_sql = "SELECT name, vorname FROM mitglied";
+  $boot = mysql_query($auswahl_sql);
+     
+  $array = array();
+  while($row = mysql_fetch_array($boot)){
+    array_push($array, $row['name'] . " " . $row['vorname']);
+  }
+?>
+
+<script>
+    $('#mannschaft_txt').inputosaurus({
+      width : '270px',
+      autoCompleteSource : <?php print(json_encode($array)); ?>,
+      activateFinalResult : true,
+      change : function(ev){
+        $('#widget2_reflect').val(ev.target.value);
+      }
+    });
+
+    $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+    prettyPrint();
+  </script>
+
+
+<!-- Autocomplete Bootstrap Variante.. goht aber ned!!!!! -->
+
+<script>
+$('#tokenfield').tokenfield({
+  autocomplete: {
+    source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
+    delay: 100
+  },
+  showAutocompleteOnFocus: true
+})
+ </script>
 
 
   </body>
