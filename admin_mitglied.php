@@ -97,7 +97,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li> <a href="index.php">Logbuch</a></li>
-            <li><a href="#about">Statistik</a></li>
+            <li><a href="statistik.php">Statistik</a></li>
             <li class="active"><a href="admin_mitglied.php">Admin</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
