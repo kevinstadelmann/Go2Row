@@ -63,52 +63,59 @@
     $datum = date("20y-m-d");
     $abfahrt = $_POST['abfahrt_txt'] . ":00";
     $abfahrt = $_POST['ankunft_txt'] . ":00";
+    
+    // Steuermann_id abfragen
+    $steuermann = explode(" ", $_POST['steuermann_txt']);
+    //print_r($steuermann);
+    //echo $steuermann[0];
+    //echo $steuermann[1];
+    $steuermann_sqlid = mysql_query("SELECT `mitglied_id` FROM `mitglied` WHERE ( name = '$steuermann[0]') AND ( vorname = '$steuermann[1]' )");
+    $steuermann_id = mysql_result($steuermann_sqlid, 0);
+    //echo $steuermann_id;
+
+    //Boot_id abfragen
+    $boot = $_POST['boot_txt'];
+    $boot_result = mysql_query("SELECT `boot_id` FROM `boot` WHERE `b_name` = '$boot'");
+    $boot_id = mysql_result($boot_result, 0);
+    //echo $boot_id;
 
     $sql =  "INSERT INTO `m_ausfahrt`(`m_ausfahrt_id`, `datum`, `mitglied_id`, `steuermann`, `km`, `ruderziel`, `abfahrt`, `ankunft`, `bemerkung`, `boot_boot_id`)";
-    $sql .= "VALUES (NULL, '$datum', '0', '".$_POST["steuermann_txt"]."', '".$_POST["km_txt"]."', '".$_POST["ruderziel_txt"]."', '".$_POST["abfahrt_txt"]."', '".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_txt"]."', '44')";
+    $sql .= "VALUES (NULL, '$datum', '0', '$steuermann_id', '".$_POST["km_txt"]."', '".$_POST["ruderziel_txt"]."', '".$_POST["abfahrt_txt"]."', '".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_txt"]."', '$boot_id')";
 
     mysql_query($sql,$connection);
 
-    // Tabele Ausfahrt mit der Mannschaft befüllen
 
+    // Zwischentabelle mit der Mannschaft befüllen
     $last_insert = mysql_insert_id();
-    // echo $last_insert;
-    $array = explode(",", $_POST['mannschaft_txt']);
-    print_r($array);
-    $ms_array = serialize($array);
+    //echo $last_insert;
+    $ms_array = explode(",", $_POST['mannschaft_txt']);
+    //print_r($ms_array); 
+
+    // god ned wil ich mit ms_array ned cha go db abfroge
+    //while($row = mysql_fetch_array($ms_array)){
+    //for($i=1;$i<count($ms_array);$i++) {
+        
+foreach($ms_array as $ms_string) {
+
+         // $n = 0;
+         $ms_result = mysql_query("SELECT mitglied_id FROM mitglied WHERE (concat(name, ' ', vorname)) = '$ms_string'");
+         $ms_id = mysql_result($ms_result, 0);
+         echo $ms_id;
+         $ms_sql =  "INSERT INTO `mitglied_has_m_ausfahrt` (`mitglied_mitglied_id`, `m_ausfahrt_m_ausfahrt_id`)";
+         $ms_sql .= "VALUES ('$ms_id', '$last_insert')";
+         mysql_query($ms_sql,$connection);
+         //$n++;
 
 
-    for($i=0;$i<count($ms_array);$i++) {
-      echo $ms_array;
+         // Mitglied 2 => last insert id verändert sich!!
+         // $ms_result2 = mysql_query("SELECT mitglied_id FROM mitglied WHERE (concat(name, ' ', vorname)) = '$ms_array[1]'");
+         // $ms_id2 = mysql_result($ms_result2, 0);
+         // echo $ms_id2;
+         // $ms_sql2 =  "INSERT INTO `mitglied_has_m_ausfahrt` (`mitglied_mitglied_id`, `m_ausfahrt_m_ausfahrt_id`)";
+         // $ms_sql2 .= "VALUES ('$ms_id', '$last_insert')";
+         // mysql_query($ms_sql2,$connection);
 
-      // Mitglied_id abfragen
-      //$steuermann = explode(",", $_POST['mannschaft_txt']);
-      //$mitglied_id = mysql_query("SELECT `mitglied_id` FROM `mitglied` WHERE ( name = 'Theivendram') AND ( vorname = 'Aathavan' )");
-
-      $ms_sql =  "UPDATE `m_ausfahrt` SET `steuermann` = '$ms_array' WHERE m_ausfahrt_id = '$last_insert'";
-      mysql_query($ms_sql,$connection);
-    }
-  
-    // UPDATE `m_ausfahrt` SET `mitglied_id`=[value-3] WHERE $last_insert
-
-    // while($row = mysql_fetch_array($mannschaft_array)){
-    //   $sql_mannschaft =  "INSERT INTO `m_ausfahrt` (`mitglied_id`)";
-    //   $sql .= "VALUES ('$row')";;
-    // }
-
-
-
-    // Schnittstellentabelle Mitglied-Ausfahrt befüllen
-
-    // $ausfahrt_id = "SELECT m_ausfahrt_id FROM m_ausfahrt WHERE "
-    // $ms_array = explode(",", $_POST['mannschaft_txt']);
-    // print_r($ms_array);
-  
-
-
-
-    // $sql =  "INSERT INTO `mitglied_has_m_ausfahrt` (`mitglied_mitglied_id`, `m_ausfahrt_m_ausfahrt_id`)";
-    // $sql .= "VALUES ('')";
+     }
 
   }
 
@@ -142,6 +149,22 @@
             <li class="active"><a href="index.php">Logbuch</a></li>
             <li><a href="statistik.php">Statistik</a></li>
             <li><a href="admin_mitglied.php">Admin</a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a></a></li>
+            <li><a>Heute wurden insgesamt 
+            <?php
+            $select_km = mysql_query("SELECT sum(km) as gesamt_km FROM m_ausfahrt WHERE datum = '" . date("20y-m-d") . "'");
+            $km = mysql_result($select_km, 0);
+            echo $km;
+            ?>
+            km gerudert!</a></li>
+
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -215,14 +238,14 @@
                <div class="form-group">
              <label class="control-label col-md-4" for="boot_txt">Boot</label>
               <div class="col-md-6">
-      <input type="text" value="" id="boot_txt" name="boot_txt" div class="form-control" placeholder="Boot suchen"/>
+      <input type="text" value="" id="boot_txt" name="boot_txt" div class="form-control" placeholder="..."/>
       </div>
     </div>
 
                       <div class="form-group">
               <label class="control-label col-md-4" for="name_txt">Steuermann</label>
                 <div class="col-md-6">
-                <input type="text" class="form-control" id="steuermann_txt" name="steuermann_txt" placeholder="Mitglied suchen"/>
+                <input type="text" class="form-control" id="steuermann_txt" name="steuermann_txt" placeholder="..."/>
                   <!-- <input type="text" class="form-control" id="tokenfield"/> -->
                 </div>
             </div>
@@ -231,7 +254,7 @@
             <div class="form-group">
               <label class="control-label col-md-4" for="mannschaft_txt">Mannschaft</label>
                 <div class="col-md-6">
-                <input type="text" class="form-control" id="mannschaft_txt" name="mannschaft_txt" placeholder="Mitglied suchen"/>
+                <input type="text" class="form-control" id="mannschaft_txt" name="mannschaft_txt" placeholder="..."/>
                   <!-- <input type="text" class="form-control" id="tokenfield"/> -->
                 </div>
             </div>
@@ -294,7 +317,15 @@
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Reservationen
+              Aktuelle Ausfahrten
+               <span style="float: right" class="badge">
+               <?php
+               $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00'";
+               $ausfahrt = mysql_query($auswahl_sql);
+                $menge_aktuell = mysql_num_rows($ausfahrt);
+               echo $menge_aktuell;
+                ?>
+               </span> 
               </a>
               </h4>
             </div>
@@ -303,8 +334,59 @@
               <div class="panel-body">
                 <table class="table table-striped">
                   <tr class="danger">
-                    <td>Boot</td>
-                    <td>Datum</td>
+                     <tr> 
+        <td><b> Boot </b></td> 
+        <td><b> Steuernmann </b></td> 
+        <td><b> Mannschaft </b></td> 
+        <td><b> KM </b></td>
+        <td><b> Ruderziel </b></td>
+        <td><b> Abfahrt </b></td>
+        <td><b> Ankunft </b></td>
+        </tr>
+        <?php
+          $datum = date("20y-m-d");
+          $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00'";
+          $ausfahrt = mysql_query($auswahl_sql);
+          $menge_aktuell = mysql_num_rows($ausfahrt);
+     
+          while($row = mysql_fetch_array($ausfahrt)){
+            echo"<tr>";
+
+            // Boot anzeigen
+            $boot_sql = "SELECT b_name FROM boot WHERE boot_id = '" . $row['boot_boot_id'] . "'";
+            $boot_result = mysql_query($boot_sql);
+            $boot = mysql_result($boot_result, 0);
+            echo "<td>" . $boot . "</td>";
+
+            // Steuermann anzeigen
+            $sm_sql = "SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $row['steuermann'] . "'";
+            $sm_result = mysql_query($sm_sql);
+              while($sm = mysql_fetch_array($sm_result)){
+                echo "<td>" . $sm['name_vorname'] . "</td>";
+              }
+
+            // Mannschaft anzeigen
+            echo "<td>";
+            $id_abfrage = "SELECT `mitglied_mitglied_id` FROM `mitglied_has_m_ausfahrt` WHERE `m_ausfahrt_m_ausfahrt_id` = '" . $row['m_ausfahrt_id'] . "'";
+            $id_abfrage_result = mysql_query($id_abfrage);
+            while ($id = mysql_fetch_array($id_abfrage_result)) {
+              $ms_sql = "SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $id['mitglied_mitglied_id'] . "'";
+              $ms_result = mysql_query($ms_sql);
+                while($ms = mysql_fetch_array($ms_result)){
+                  echo $ms['name_vorname'];
+                  echo "<br/>";
+                }
+            }
+            echo "</td>";
+            
+            echo "<td>" . $row['km'] . "</td>";
+            echo "<td>" . $row['ruderziel'] . "</td>";
+            echo "<td>" . $row['abfahrt'] . "</td>";
+            echo "<td>" . "-" . "</td>";
+            echo "</tr>";
+           }
+        ?>
+                   </tr>
                   </tr>
                 </table>
               </div><!-- Colapse 1 - Inhalt -->
@@ -316,8 +398,15 @@
             <div class="panel-heading" role="tab" id="headingTwo">
               <h4 class="panel-title">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Aktuelle Ausfahrten
-                <span style="float: right" class="badge">14</span> 
+                 Reservationen
+                <span style="float: right" class="badge">0
+   <!--             <?php
+               $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00'";
+               $ausfahrt = mysql_query($auswahl_sql);
+                $menge_aktuell = mysql_num_rows($ausfahrt);
+               echo $menge_aktuell;
+                ?>-->
+               </span>  
                 </a>
               </h4>
             </div>
@@ -326,8 +415,7 @@
               <div class="panel-body">
                 <table class="table table-striped">
                   <tr class="warning">
-                    <td>Kevin</td>
-                    <td>10km</td>
+
                   </tr>
                 </table>
               </div><!-- Colapse 2 - Inhalt -->
@@ -341,6 +429,14 @@
               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
               Abgeschlossene Ausfahrten
               </a>
+              <span style="float: right" class="badge">
+               <?php
+               $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft != '00:00:00'";
+               $ausfahrt = mysql_query($auswahl_sql);
+                $menge_abgeschlossen = mysql_num_rows($ausfahrt);
+               echo $menge_abgeschlossen;
+                ?>
+               </span> 
               </h4>
             </div>
             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
@@ -352,6 +448,7 @@
         <tr> 
         <td><b> Boot </b></td> 
         <td><b> Steuernmann </b></td> 
+        <td><b> Mannschaft </b></td> 
         <td><b> KM </b></td>
         <td><b> Ruderziel </b></td>
         <td><b> Abfahrt </b></td>
@@ -359,22 +456,55 @@
         </tr>
         <?php
           $datum = date("20y-m-d");
-          $auswahl_sql = "SELECT * FROM m_ausfahrt";
+          $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft != '00:00:00'";
           $ausfahrt = mysql_query($auswahl_sql);
      
           while($row = mysql_fetch_array($ausfahrt)){
             echo"<tr>";
-            echo "<td>" . $row['datum'] . "</td>";
-            echo "<td>" . $row['boot_id'] . "</td>";
-            echo "<td>" . $row['boot_id'] . "</td>";
-            echo "<td>" . $row['boot_id'] . "</td>";
 
+            // Boot anzeigen
+            $boot_sql = "SELECT b_name FROM boot WHERE boot_id = '" . $row['boot_boot_id'] . "'";
+            $boot_result = mysql_query($boot_sql);
+            $boot = mysql_result($boot_result, 0);
+            echo "<td>" . $boot . "</td>";
+
+            // Steuermann anzeigen
+            $sm_sql = "SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $row['steuermann'] . "'";
+            $sm_result = mysql_query($sm_sql);
+              while($sm = mysql_fetch_array($sm_result)){
+                echo "<td>" . $sm['name_vorname'] . "</td>";
+              }
+
+            // Mannschaft anzeigen
+            echo "<td>";
+            $id_abfrage = "SELECT `mitglied_mitglied_id` FROM `mitglied_has_m_ausfahrt` WHERE `m_ausfahrt_m_ausfahrt_id` = '" . $row['m_ausfahrt_id'] . "'";
+            $id_abfrage_result = mysql_query($id_abfrage);
+            while ($id = mysql_fetch_array($id_abfrage_result)) {
+              $ms_sql = "SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $id['mitglied_mitglied_id'] . "'";
+              $ms_result = mysql_query($ms_sql);
+                while($ms = mysql_fetch_array($ms_result)){
+                  echo $ms['name_vorname'];
+                  echo "<br/>";
+                }
+            }
+            echo "</td>";
+
+
+            // $ms_sql = "SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $row['mitglied_id'] . "'";
+            // $ms_result = mysql_query($ms_sql);
+            //   while($ms = mysql_fetch_array($ms_result)){
+            //     echo "<td>" . $ms['name_vorname'] . "</td>";
+            //   }
+            
+            echo "<td>" . $row['km'] . "</td>";
+            echo "<td>" . $row['ruderziel'] . "</td>";
+
+
+            echo "<td>" . $row['abfahrt'] . "</td>";
+            echo "<td>" . $row['ankunft'] . "</td>";
             echo "</tr>";
            }
         ?>
-
-
-
                    </tr>
 
                 </table>
