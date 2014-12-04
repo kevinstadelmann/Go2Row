@@ -16,6 +16,7 @@
     <link href="offcanvas.css" rel="stylesheet">
     <link href="bower_components/bootstrap/dist/css/inputosaurus.css" rel="stylesheet">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" rel="stylesheet">
+    <link href="css/inputosaurus.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -55,23 +56,33 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
-   var_dump($_POST);
+   //var_dump($_POST);
   
-  if(isset($_POST['ausfahrt_speichern'])){
-
-    $datum = date("20y-m-d");
-    $abfahrt = $_POST['abfahrt_txt'] . ":00";
-    $abfahrt = $_POST['ankunft_txt'] . ":00";
-
-    $sql =  "INSERT INTO `m_ausfahrt` (`m_ausfahrt_id`, `datum`, `mitglied_id`, `steuermann`, `km`, `ruderziel`, `abfahrt`, `ankunft`, `bemerkung`, `boot_boot_id`)";
-    $sql .= "VALUES (NULL, '$datum', '0', '".$_POST["name_txt"]."', '".$_POST["km_txt"]."', '".$_POST["ruderziel_txt"]."', '".$_POST["abfahrt_txt"]."', '".$_POST["ankunft_txt"]."', '".$_POST["bemerkung_txt"]."', '44')";
-
-
-      mysql_query($sql,$connection);
-  }
-
-
   //mysql_close($connection);
+
+  // Statistik PHP
+  // Wenn Filter_anwenden Button gedrückt wurde
+  if(isset($_POST['filter_anwenden'])){
+
+    // Textbox Inhalt wieder aufsplitten um Mitglied in der DB zu finden
+    $filter_name = explode(" ", $_POST['name_txt']);
+    // Mitglieder ID ermitteln
+    $filter_name_sqlid = mysql_query("SELECT `mitglied_id` FROM `mitglied` WHERE ( name = '$filter_name[0]') AND ( vorname = '$filter_name[1]' )");
+    $filter_name_id = mysql_result($filter_name_sqlid, 0);
+
+    // Alle Ausfahrt-ID's "sammeln"
+    $arr_id_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE m_ausfahrt_id in (SELECT m_ausfahrt_m_ausfahrt_id FROM mitglied_has_m_ausfahrt WHERE mitglied_mitglied_id = '$filter_name_id') group by MONTH(datum)");
+    
+    // Kilometerdaten in Array "pushen", damit ich es per json der chart.js übergeben kann
+    $arr_km = array();
+    $arr_datum = array();
+
+    while( $row = mysql_fetch_array($arr_id_sql)){
+      array_push($arr_km, $row['km']);
+      array_push($arr_datum, $row['datum']);
+    }
+
+      }
 
 ?>    
   <!-- NAVIGATION -->
@@ -100,30 +111,50 @@
   <!-- HAUPTINHALT -->
   <div class="container">
     <div class="row">
+
+      <div class="col-sm-3" id="sidebar" role="navigation">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            Filter
+          </div> 
+        <!-- Filter Formular aufbauen -->
+      </br>
+          <form class="form-horizontal" id="statistik_form" name="commentform" method="post" action="statistik.php"> 
+            <div class="form-group">
+
+              <!-- Name -->
+              <label class="control-label col-md-4" for="name_txt">Name</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="name_txt" width="120px  " name="name_txt"/>
+              </div>
+              <!-- End Name -->
+
+              <!-- Filter Anwenden - Button-->
+         
+                <div class="col-md-6">
+                  <input type="submit" name="filter_anwenden" class="btn btn-primary btn-xs">
+                </div>
+              
+              <!-- End Filter Anwenden Button -->
+
+            </div>
+          </form>
+        </div>
+        
+      </div><!--Seiten-Inhaltsverzeichnis
    
       <!-- Hauptinhalt - Rechts -->
+      <div class="col-xs-12 col-sm-9">
         <div class="panel panel-primary">
           <div class="panel-heading">
             Statistik
-          </div>
-          Hier sollten mal Statistiken angezeigt werden...
-          Sehr guet
-          
-          <?php
-          echo " ";
-          $str = "Aathi, Kevin, Janik";
-          $arr = explode(',', $str);
+          </div> 
 
-          echo $arr[0];
-          echo $arr[1];
-          echo $arr[2];
-          ?>
-
-          <canvas id="buyers" width="600" height="400"></canvas>
-
-
-
+          <!-- Statistik anzeigen -->
+          <canvas id="buyers" width="800"height="400"></canvas>
+ 
       </div> <!-- Hauptinhalt - Rechts -->
+    </div>
     </div> <!-- row -->
     <footer>
       <p>© Company 2014</p>
@@ -149,29 +180,72 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   
      <script src="bower_components/bootstrap/js/inputosaurus.js"></script>
+     <script src='Chart.min.js'></script>
+     <script src="js/inputosaurus.js"></script>
+     <!--<script src="bower_components/chart/chart.js"></script>-->
 
-     <script src="chart.min.js"></script>
+
 
      <!-- Statistik Javascript -->
-     <script>
-     var buyers = document.getElementById('buyers').getContext('2d');
-    new Chart(buyers).Line(buyerData);
-    var buyerData = {
-      labels : ["January","February","March","April","May","June"],
-      datasets : [
-    {
-      fillColor : "rgba(172,194,132,0.4)",
-      strokeColor : "#ACC26D",
-      pointColor : "#fff",
-      pointStrokeColor : "#9DB86D",
-      data : [203,156,99,251,305,247]
-    }
-  ]
-}
 
+     <script type="text/javascript">
 
-
+      var buyerData = {
+          labels : <?php print(json_encode($arr_datum)); ?>,
+          datasets: [
+        {
+            label: "My First dataset",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: <?php print(json_encode($arr_km)); ?>
+        },
+        {
+            label: "My Second dataset",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            //data: [28, 48, 40, 19, 86, 27, 90]
+        }
+    ]
+      }
+          var buyers = document.getElementById('buyers').getContext('2d');
+          new Chart(buyers).Line(buyerData);
      </script>
+
+    <!-- Autocomplete Steuermann -->
+
+    <?php
+      $auswahl_sql = "SELECT name, vorname FROM mitglied";
+      $boot = mysql_query($auswahl_sql);
+         
+      $array = array();
+      while($row = mysql_fetch_array($boot)){
+        array_push($array, $row['name'] . " " . $row['vorname']);
+      }
+    ?>
+
+
+    <script>
+        $('#name_txt').inputosaurus({
+          width : '270px',
+          autoCompleteSource : <?php print(json_encode($array)); ?>,
+          activateFinalResult : true,
+          change : function(ev){
+            $('#widget2_reflect').val(ev.target.value);
+          }
+        });
+
+        $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+        prettyPrint();
+      </script>
 
   </body>
 </html>

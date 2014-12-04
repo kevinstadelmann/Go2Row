@@ -314,7 +314,7 @@ $('#btnDelteYes').click(function () {
 
     <script src="offcanvas.js"></script>
     <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
-    <script src="frames/validation.js"></script>
+    <script src="js/validation.js"></script>
 
 
   

@@ -261,6 +261,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js" type="text/javascript"></script>
 
@@ -298,7 +299,7 @@ $('#btnDelteYes').click(function () {
 
     <script src="offcanvas.js"></script>
     <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
-    <script src="frames/validation.js"></script>
+    <script src="js/validation.js"></script>
 
 
   
