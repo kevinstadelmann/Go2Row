@@ -62,7 +62,7 @@
     // Tabelle Ausfahrt mit einfach Daten füllen
     $datum = date("20y-m-d");
     $abfahrt = $_POST['abfahrt_txt'] . ":00";
-    $abfahrt = $_POST['ankunft_txt'] . ":00";
+    $ankunft = $_POST['ankunft_txt'] . ":00";
     
     // Steuermann_id abfragen
     $steuermann = explode(" ", $_POST['steuermann_txt']);
@@ -161,6 +161,9 @@ foreach($ms_array as $ms_string) {
             <?php
             $select_km = mysql_query("SELECT sum(km) as gesamt_km FROM m_ausfahrt WHERE datum = '" . date("20y-m-d") . "'");
             $km = mysql_result($select_km, 0);
+            if(empty($km)){
+              echo 0;
+            }
             echo $km;
             ?>
             km gerudert!</a></li>
@@ -235,26 +238,25 @@ foreach($ms_array as $ms_string) {
                 </div>
             </div>
 
-               <div class="form-group">
+          <div class="form-group">
              <label class="control-label col-md-4" for="boot_txt">Boot</label>
               <div class="col-md-6">
-      <input type="text" value="" id="boot_txt" name="boot_txt" div class="form-control" placeholder="..."/>
-      </div>
-    </div>
+                  <input type="text" value="" id="boot_txt" name="boot_txt" div class="form-control" placeholder="Suchen"/>
+              </div>
+          </div>
 
                       <div class="form-group">
               <label class="control-label col-md-4" for="name_txt">Steuermann</label>
                 <div class="col-md-6">
-                <input type="text" class="form-control" id="steuermann_txt" name="steuermann_txt" placeholder="..."/>
+                <input type="text" class="form-control" id="steuermann_txt" name="steuermann_txt" placeholder="Suchen"/>
                   <!-- <input type="text" class="form-control" id="tokenfield"/> -->
                 </div>
             </div>
 
-
             <div class="form-group">
               <label class="control-label col-md-4" for="mannschaft_txt">Mannschaft</label>
                 <div class="col-md-6">
-                <input type="text" class="form-control" id="mannschaft_txt" name="mannschaft_txt" placeholder="..."/>
+                <input type="text" class="form-control" id="mannschaft_txt" name="mannschaft_txt" placeholder="Suchen"/>
                   <!-- <input type="text" class="form-control" id="tokenfield"/> -->
                 </div>
             </div>
@@ -269,7 +271,7 @@ foreach($ms_array as $ms_string) {
             <div class="form-group">
               <label class="control-label col-md-4" for="ruderziel_txt">Ruderziel</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" id="ruderziel_txt" name="ruderziel_txt" placeholder="Ruderziel"/>
+                  <input type="text" class="form-control" id="ruderziel_txt" name="ruderziel_txt" placeholder="Ort"/>
                 </div>
             </div>
 
@@ -342,6 +344,7 @@ foreach($ms_array as $ms_string) {
         <td><b> Ruderziel </b></td>
         <td><b> Abfahrt </b></td>
         <td><b> Ankunft </b></td>
+        <td><b>  </b></td>
         </tr>
         <?php
           $datum = date("20y-m-d");
@@ -381,8 +384,12 @@ foreach($ms_array as $ms_string) {
             
             echo "<td>" . $row['km'] . "</td>";
             echo "<td>" . $row['ruderziel'] . "</td>";
+
+            //$abfahrt = explode$row['abfahrt'];
+            //$abfahrt;
             echo "<td>" . $row['abfahrt'] . "</td>";
             echo "<td>" . "-" . "</td>";
+            echo "<td><a href='ausfahrt_edit.php?action=bearbeiten&id=".$row['m_ausfahrt_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
            }
         ?>
