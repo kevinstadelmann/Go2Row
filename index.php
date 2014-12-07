@@ -184,10 +184,12 @@ foreach($ms_array as $ms_string) {
 
 
 
-<?php
-echo "<div class='kalender'></div>";
-
-?>
+<div class='kalender'></div>
+</br>
+<a role="button" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</a>
+           
+     
+           
 
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
@@ -214,7 +216,7 @@ echo "<div class='kalender'></div>";
 
 
 <!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
+    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span> Ausfahrt eintragen</a>
 </br>
     <!-- Modal -->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -383,10 +385,8 @@ echo "<div class='kalender'></div>";
             
             echo "<td>" . $row['km'] . "</td>";
             echo "<td>" . $row['ruderziel'] . "</td>";
-
-            //$abfahrt = explode$row['abfahrt'];
-            //$abfahrt;
-            echo "<td>" . $row['abfahrt'] . "</td>";
+            $abfahrt = explode(":", $row['abfahrt']);
+            echo "<td>" . $abfahrt[0] . ":" . $abfahrt[1] . "</td>";
             echo "<td>" . "-" . "</td>";
             echo "<td><a href='ausfahrt_edit.php?action=bearbeiten&id=".$row['m_ausfahrt_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
@@ -506,8 +506,10 @@ echo "<div class='kalender'></div>";
             echo "<td>" . $row['ruderziel'] . "</td>";
 
 
-            echo "<td>" . $row['abfahrt'] . "</td>";
-            echo "<td>" . $row['ankunft'] . "</td>";
+            $abfahrt = explode(":", $row['abfahrt']);
+            echo "<td>" . $abfahrt[0] . ":" . $abfahrt[1] . "</td>";
+            $ankunft = explode(":", $row['ankunft']);
+            echo "<td>" . $ankunft[0] . ":" . $ankunft[1] . "</td>";
             echo "</tr>";
            }
         ?>
@@ -555,7 +557,7 @@ echo "<div class='kalender'></div>";
 
 <script>
   $('.kalender').supercal({
-      todayButton: true,
+      todayButton: false,
       showInput: false,
       transition: 'crossfade'
   });
