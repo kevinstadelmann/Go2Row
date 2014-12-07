@@ -16,6 +16,8 @@
     <link href="offcanvas.css" rel="stylesheet">
     <link href="css/inputosaurus.css" rel="stylesheet">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -177,24 +179,21 @@ foreach($ms_array as $ms_string) {
   <div class="container">
     <div class="row">
       <!-- Seiten-Inhaltsverzeichnis -->
-      <div class="col-sm-3" id="sidebar" role="navigation">
+      <div class="col-sm-4" id="sidebar" role="navigation">
         <div class="list-group">
-          <a href="#" class="list-group-item active">Link</a>
-          <a href="#" class="list-group-item">Link</a>
-          <a href="#" class="list-group-item">Link</a>
-          <a href="#" class="list-group-item">Link</a>
-          <p>
-          Filter Möglichkeiten
-          Kalender
-          Nicht Abgeschlossene Ausfahrten auf einen Blick
-          Reservationen auf einen Blick
-          Suche nach Ausfahrten
-        </p>
+
+
+
+<?php
+echo "<div class='kalender'></div>";
+
+?>
+
         </div>
-      </div><!--Seiten-Inhaltsverzeichnis 
+      </div><!--Seiten-Inhaltsverzeichnis -->
     
       <!-- Hauptinhalt - Rechts -->
-      <div class="col-xs-12 col-sm-9">
+      <div class="col-xs-12 col-sm-8">
         <p class="pull-right visible-xs">
           <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
             Toggle nav
@@ -549,7 +548,18 @@ foreach($ms_array as $ms_string) {
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   
      <script src="js/inputosaurus.js"></script>
+    <script src="js/jquery.supercal.js"></script>
 
+
+<!-- Kalender -->
+
+<script>
+  $('.kalender').supercal({
+      todayButton: true,
+      showInput: false,
+      transition: 'crossfade'
+  });
+</script>
 
 
 <!-- Autocomplete Boot -->
@@ -577,7 +587,7 @@ foreach($ms_array as $ms_string) {
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
     prettyPrint();
-  </script>
+</script>
 
 
 <!-- Autocomplete Steuermann -->
@@ -605,7 +615,7 @@ foreach($ms_array as $ms_string) {
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
     prettyPrint();
-  </script>
+</script>
 
 
 <!-- Autocomplete Mannschaft -->
@@ -633,20 +643,7 @@ foreach($ms_array as $ms_string) {
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
     prettyPrint();
-  </script>
-
-
-<!-- Autocomplete Bootstrap Variante.. goht aber ned!!!!! -->
-
-<script>
-$('#tokenfield').tokenfield({
-  autocomplete: {
-    source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
-    delay: 100
-  },
-  showAutocompleteOnFocus: true
-})
- </script>
+</script>
 
 
   </body>
