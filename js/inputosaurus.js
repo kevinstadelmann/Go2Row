@@ -71,10 +71,11 @@
 				placeholder =  o.placeholder || this.element.attr('placeholder') || null;
 				
 			this._chosenValues = [];
+			var name = widget.element.attr('name');
 
 			// Create the elements
 			els.ul = $('<ul class="inputosaurus-container">');
-			els.input = $('<input type="text" />');
+			els.input = $('<input type="text" name="'+name+'" />');
 			els.inputCont = $('<li class="inputosaurus-input inputosaurus-required"></li>');
 			els.origInputCont = $('<li class="inputosaurus-input-hidden inputosaurus-required">');
 			

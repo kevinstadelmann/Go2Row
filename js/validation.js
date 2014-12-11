@@ -1,3 +1,7 @@
+$(document).ready(function() {
+
+// Validation vom Mitglied hinzufügen Formular
+
 $('#mitglied_form').bootstrapValidator({
 message: 'This value is not valid', 
 feedbackIcons: {
@@ -55,6 +59,7 @@ $('#mitglied_form').bootstrapValidator('resetForm', true);
 });
 
 
+// Validation vom Boot hinzufügen Formular
 
 
 $('#boot_form').bootstrapValidator({
@@ -95,4 +100,52 @@ $('.edit').click(function() {
   $(this)
 })
 
+// Validation vom Ausfahrt hinzufügen Formular
 
+// Validation vom Mitglied hinzufügen Formular
+
+$('#ausfahrt_form').bootstrapValidator({
+message: 'This value is not valid', 
+feedbackIcons: {
+    valid: 'glyphicon glyphicon-ok',
+    invalid: 'glyphicon glyphicon-remove',
+    validating: 'glyphicon glyphicon-refresh'
+  },
+fields: {
+    boot_txt: {
+      validators: {
+        notEmpty: {
+          message: "Bitte ein Boot eingeben!"
+              }, // notEmpty
+        regexp: {
+          regexp: /^[A-Za-z\s.'-]+$/,
+          message: "Alphabetical characters, hyphens and spaces"
+        }
+            } // validators
+          },  // km
+    mannschaft_txt: {
+      validators: {
+        notEmpty: {
+          message: "Bitte min. 1 Mitglied angeben!"
+              }, // notEmpty
+            } // validators
+          },  // mannschaft
+    km_txt: {
+      validators: {
+        //notEmpty: {
+          //message: "Für Kilometer sind nur Zahlen erlaubt!"
+          //    }, // notEmpty
+        regexp: {
+          regexp: /^[1-1000]+$/,
+          message: "Nur Zahlen zwischen 1-1000"
+        }
+            } // validators
+          } // km
+    } // fields
+    });
+$('#ausfahrt_form').on('shown.bs.modal', function() {
+$('#ausfahrt_form').bootstrapValidator('resetForm', true);
+});
+
+
+});

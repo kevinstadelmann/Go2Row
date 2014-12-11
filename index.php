@@ -12,6 +12,9 @@
     <!-- Bootstrap core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Bootstrap Vailidator -->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css" rel="stylesheet"/>
+
     <!-- Custom styles for this template -->
     <link href="offcanvas.css" rel="stylesheet">
     <link href="css/inputosaurus.css" rel="stylesheet">
@@ -124,11 +127,7 @@ foreach($ms_array as $ms_string) {
 
 ?>
 
-            <script language="javascript" type="text/javascript">
-              var d = new Date();
-              var datum = d.getDate()+"."+d.getMonth()+"."+(d.getYear()+1900);
-              $.post('index.php', {variable: datum});
-            </script>
+            
 
     
   <!-- NAVIGATION -->
@@ -191,8 +190,14 @@ foreach($ms_array as $ms_string) {
           Suche nach Ausfahrten
         </p>
         </div>
-      </div><!--Seiten-Inhaltsverzeichnis 
+      </div><!--Seiten-Inhaltsverzeichnis -->
+
+
     
+
+
+
+
       <!-- Hauptinhalt - Rechts -->
       <div class="col-xs-12 col-sm-9">
         <p class="pull-right visible-xs">
@@ -302,6 +307,8 @@ foreach($ms_array as $ms_string) {
               </div>
             </div>
           </form>
+
+          
         
       </div><!-- End of Modal body -->
     </div><!-- End of Modal content -->
@@ -544,11 +551,20 @@ foreach($ms_array as $ms_string) {
     <script src="offcanvas.js"></script>
 
     <!-- Eigene Javascript Datei zum überprüfen der Formulardaten -->
-    <script src="js/validation.js"></script>
+    
 
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+    <script src="js/validation.js"></script>
   
-     <script src="js/inputosaurus.js"></script>
+    <script src="js/inputosaurus.js"></script>
+
+    <script language="javascript" type="text/javascript">
+              var d = new Date();
+              var datum = d.getDate()+"."+d.getMonth()+"."+(d.getYear()+1900);
+              $.post('index.php', {variable: datum});
+            </script>
 
 
 
@@ -576,7 +592,7 @@ foreach($ms_array as $ms_string) {
 
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
-    prettyPrint();
+    //prettyPrint();
   </script>
 
 
@@ -604,7 +620,7 @@ foreach($ms_array as $ms_string) {
 
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
-    prettyPrint();
+    //prettyPrint();
   </script>
 
 
@@ -632,21 +648,13 @@ foreach($ms_array as $ms_string) {
 
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
-    prettyPrint();
+    //prettyPrint();
   </script>
 
 
 <!-- Autocomplete Bootstrap Variante.. goht aber ned!!!!! -->
 
-<script>
-$('#tokenfield').tokenfield({
-  autocomplete: {
-    source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
-    delay: 100
-  },
-  showAutocompleteOnFocus: true
-})
- </script>
+
 
 
   </body>

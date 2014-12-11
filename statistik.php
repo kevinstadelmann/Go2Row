@@ -56,13 +56,35 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
-   //var_dump($_POST);
-  
-  //mysql_close($connection);
 
-  // Statistik PHP
+// Statistik PHP
+  // Arrays für json übergabe:
+  $arr_km = array();
+  $arr_datum = array();
+
+
+  // Standard Statistik anzeigen (z.B. Ebene Club)
+  $arr_club_sql = mysql_query("SELECT sum(km) as km, month(datum) as datum FROM m_ausfahrt group by MONTH(datum)");
+  while( $row = mysql_fetch_array($arr_club_sql)){
+      array_push($arr_km, $row['km']);
+      array_push($arr_datum, $row['datum']);
+    }
+    echo print_r($arr_km);
+    echo print_r($arr_datum);
+
+
   // Wenn Filter_anwenden Button gedrückt wurde
   if(isset($_POST['filter_anwenden'])){
+
+    // bisherige Daten zurücksetzten
+    $arr_km = array();
+    $arr_datum = array();
+
+    // Jahr Filter auslesen
+    $jahr = $_POST['jahr_slc'];
+
+    // Wenn Textbox befüllt ist nach Mitglied filtern, sonst ganzen Club anzeigen
+    if($_POST['name_txt'] != ""){
 
     // Textbox Inhalt wieder aufsplitten um Mitglied in der DB zu finden
     $filter_name = explode(" ", $_POST['name_txt']);
@@ -71,18 +93,21 @@
     $filter_name_id = mysql_result($filter_name_sqlid, 0);
 
     // Alle Ausfahrt-ID's "sammeln"
-    $arr_id_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE m_ausfahrt_id in (SELECT m_ausfahrt_m_ausfahrt_id FROM mitglied_has_m_ausfahrt WHERE mitglied_mitglied_id = '$filter_name_id') group by MONTH(datum)");
-    
-    // Kilometerdaten in Array "pushen", damit ich es per json der chart.js übergeben kann
-    $arr_km = array();
-    $arr_datum = array();
+    $arr_data_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE year(datum)='$jahr' AND m_ausfahrt_id in (SELECT m_ausfahrt_m_ausfahrt_id FROM mitglied_has_m_ausfahrt WHERE mitglied_mitglied_id = '$filter_name_id') group by MONTH(datum)");
 
-    while( $row = mysql_fetch_array($arr_id_sql)){
+    }else{
+      $arr_data_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE year(datum)='$jahr' AND m_ausfahrt_id group by MONTH(datum)");
+    }
+
+
+    // Kilometerdaten in Array "pushen", damit ich es per json der chart.js übergeben kann
+    while( $row = mysql_fetch_array($arr_data_sql)){
       array_push($arr_km, $row['km']);
       array_push($arr_datum, $row['datum']);
     }
+  } // End of Isset
+  
 
-      }
 
 ?>    
   <!-- NAVIGATION -->
@@ -122,12 +147,30 @@
           <form class="form-horizontal" id="statistik_form" name="commentform" method="post" action="statistik.php"> 
             <div class="form-group">
 
-              <!-- Name -->
+              <!-- Name - Filter -->
               <label class="control-label col-md-4" for="name_txt">Name</label>
               <div class="col-md-6">
-                <input type="text" class="form-control" id="name_txt" width="120px  " name="name_txt"/>
+                <input type="text" class="form-control" id="name_txt" name="name_txt"/>
               </div>
               <!-- End Name -->
+
+              <!-- Zeit - Filter -->
+              <div class="form-group">
+              <label class="control-label col-md-4" for="jahr_slc">Jahr</label>
+                <div class="col-md-6">           
+                  <select name="jahr_slc" size="1" class="form-control">
+                    <?php
+                    $filter_jahr_sql = "SELECT distinct year(datum) as jahr FROM m_ausfahrt";
+                    $jahre = mysql_query($filter_jahr_sql);
+               
+                    while($row = mysql_fetch_array($jahre)){
+                    echo"<option>" . $row['jahr'] . "</option>";
+                    }
+
+                    ?>
+                  </select>
+                </div>
+            </div>
 
               <!-- Filter Anwenden - Button-->
          
@@ -188,30 +231,30 @@
 
      <!-- Statistik Javascript -->
 
-     <script type="text/javascript">
+          <script type="text/javascript">
 
       var buyerData = {
           labels : <?php print(json_encode($arr_datum)); ?>,
           datasets: [
-        {
-            label: "My First dataset",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: <?php print(json_encode($arr_km)); ?>
-        },
-        {
-            label: "My Second dataset",
+        {   
+            label: "Jahr1",
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)",
-            //data: [28, 48, 40, 19, 86, 27, 90]
+            data: <?php print(json_encode($arr_km)); ?>
+        },
+        {
+            label: "Jahr2",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            //data: [20,30,40,30,20,5]
         }
     ]
       }
@@ -234,7 +277,7 @@
 
     <script>
         $('#name_txt').inputosaurus({
-          width : '270px',
+          width : '100px',
           autoCompleteSource : <?php print(json_encode($array)); ?>,
           activateFinalResult : true,
           change : function(ev){
