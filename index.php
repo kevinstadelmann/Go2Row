@@ -19,6 +19,8 @@
     <link href="offcanvas.css" rel="stylesheet">
     <link href="css/inputosaurus.css" rel="stylesheet">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -172,34 +174,33 @@ foreach($ms_array as $ms_string) {
       </div><!-- /.container -->
     </nav><!-- /.navbar -->
 
-  <!-- HAUPTINHALT -->
+<!-- HAUPTINHALT -->
   <div class="container">
     <div class="row">
       <!-- Seiten-Inhaltsverzeichnis -->
-      <div class="col-sm-3" id="sidebar" role="navigation">
+      <div class="col-sm-4" id="sidebar" role="navigation">
         <div class="list-group">
-          <a href="#" class="list-group-item active">Link</a>
-          <a href="#" class="list-group-item">Link</a>
-          <a href="#" class="list-group-item">Link</a>
-          <a href="#" class="list-group-item">Link</a>
-          <p>
-          Filter Möglichkeiten
-          Kalender
-          Nicht Abgeschlossene Ausfahrten auf einen Blick
-          Reservationen auf einen Blick
-          Suche nach Ausfahrten
-        </p>
+          <?php
+            $kalender = $_POST['kalender'];
+            echo $kalender;
+          ?> 
+
+      <div class='kalender'></div>
+        </br>   
+<button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button>
+      
+
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
 
-    
-
-
-
-
       <!-- Hauptinhalt - Rechts -->
-      <div class="col-xs-12 col-sm-9">
+
+
+
+
+
+      <div class="col-xs-12 col-sm-8">
         <p class="pull-right visible-xs">
           <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
             Toggle nav
@@ -220,7 +221,7 @@ foreach($ms_array as $ms_string) {
 
 
 <!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
+    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span> Ausfahrt eintragen</a>
 </br>
     <!-- Modal -->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -283,9 +284,11 @@ foreach($ms_array as $ms_string) {
             <div class="form-group">
             <label class="control-label col-md-4" for="abfahrt_txt">Abfahrt</label>
               <div class="col-md-6">
-                <input type="text" class="form-control" id="abfahrt_txt" name="abfahrt_txt" placeholder="hh:mm"/>
+                <input type="text" class="form-control" id="abfahrt_txt" name="abfahrt_txt" value="<?php $datum = date("H:i"); echo $datum;?>"
+                placeholder="hh:mm"/>
               </div>
             </div>
+
           
             <div class="form-group">
               <label class="control-label col-md-4" for="ankunft_txt">Ankunft</label>
@@ -391,10 +394,8 @@ foreach($ms_array as $ms_string) {
             
             echo "<td>" . $row['km'] . "</td>";
             echo "<td>" . $row['ruderziel'] . "</td>";
-
-            //$abfahrt = explode$row['abfahrt'];
-            //$abfahrt;
-            echo "<td>" . $row['abfahrt'] . "</td>";
+            $abfahrt = explode(":", $row['abfahrt']);
+            echo "<td>" . $abfahrt[0] . ":" . $abfahrt[1] . "</td>";
             echo "<td>" . "-" . "</td>";
             echo "<td><a href='ausfahrt_edit.php?action=bearbeiten&id=".$row['m_ausfahrt_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
@@ -514,8 +515,10 @@ foreach($ms_array as $ms_string) {
             echo "<td>" . $row['ruderziel'] . "</td>";
 
 
-            echo "<td>" . $row['abfahrt'] . "</td>";
-            echo "<td>" . $row['ankunft'] . "</td>";
+            $abfahrt = explode(":", $row['abfahrt']);
+            echo "<td>" . $abfahrt[0] . ":" . $abfahrt[1] . "</td>";
+            $ankunft = explode(":", $row['ankunft']);
+            echo "<td>" . $ankunft[0] . ":" . $ankunft[1] . "</td>";
             echo "</tr>";
            }
         ?>
@@ -558,13 +561,28 @@ foreach($ms_array as $ms_string) {
 
     <script src="js/validation.js"></script>
   
-    <script src="js/inputosaurus.js"></script>
+    <!-- Kalender -->
 
-    <script language="javascript" type="text/javascript">
-              var d = new Date();
-              var datum = d.getDate()+"."+d.getMonth()+"."+(d.getYear()+1900);
-              $.post('index.php', {variable: datum});
-            </script>
+    <script>
+      $('.kalender').supercal({
+          todayButton: false,
+          showInput: true,
+          transition: 'crossfade'
+      });
+      var myRedirect = function(redirectUrl, arg, value) {
+      var form = $('<form action="' + redirectUrl + '" method="post">' +
+      '<input type="hidden" name="'+ arg +'" value="' + value + '"></input>' + '</form>');
+      $('body').append(form);
+      $(form).submit();
+    };
+
+    $("button.show-date").click(function(){
+
+    //$.post("index.php", { kalender: $('.supercal').data('date') } ).done(function(res){window.location="index.php"});
+    //alert($('.supercal').data('date'));
+myRedirect("/Go2Row/index.php", "kalender", $('.supercal').data('date'));
+});
+</script>
 
 
 
@@ -592,8 +610,10 @@ foreach($ms_array as $ms_string) {
 
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
-    //prettyPrint();
+
   </script>
+
+
 
 
 <!-- Autocomplete Steuermann -->
@@ -620,8 +640,9 @@ foreach($ms_array as $ms_string) {
 
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
-    //prettyPrint();
+
   </script>
+
 
 
 <!-- Autocomplete Mannschaft -->
@@ -648,12 +669,8 @@ foreach($ms_array as $ms_string) {
 
     $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
-    //prettyPrint();
+
   </script>
-
-
-<!-- Autocomplete Bootstrap Variante.. goht aber ned!!!!! -->
-
 
 
 

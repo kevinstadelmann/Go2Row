@@ -61,20 +61,47 @@
 
    var_dump($_POST);
 
-   // Form initialsieren
+   // Form initialsieren mit Basis Werten
    $edit_sql = mysql_query("SELECT * FROM m_ausfahrt WHERE m_ausfahrt_id='".mysql_real_escape_string($_GET['id'])."'");
    $edit_array = mysql_fetch_array($edit_sql);
-   
+
    // Wenn Speichern Button gedrück wird - Ausfahrt updaten
    if(isset($_POST['ausfahrt_updaten'])){
     $abfahrt = $_POST['abfahrt_txt'] . ":00";
     $ankunft = $_POST['ankunft_txt'] . ":00";
 
+    // Steuermann_id abfragen
+    $steuermann = explode(" ", $_POST['steuermann_txt']);
+    $steuermann_sqlid = mysql_query("SELECT `mitglied_id` FROM `mitglied` WHERE ( name = '$steuermann[0]') AND ( vorname = '$steuermann[1]' )");
+    $steuermann_id = mysql_result($steuermann_sqlid, 0);
+
+    //Boot_id abfragen
+    $boot = $_POST['boot_txt'];
+    $boot_result = mysql_query("SELECT `boot_id` FROM `boot` WHERE `b_name` = '$boot'");
+    $boot_id = mysql_result($boot_result, 0);
+
     // Ausfahrt mit den Änderungen speichern
-    $sql = "UPDATE `m_ausfahrt` SET `datum`='".$_POST["datum_txt"]."',`mitglied_id`='".$_POST["mannschaft_txt"]."',`steuermann`='".$_POST["steuermann_txt"]."',`km`='".$_POST["km_txt"]."',`ruderziel`='".$_POST["ruderziel_txt"]."',`abfahrt`='$abfahrt',`ankunft`='$ankunft',`bemerkung`='".$_POST["bemerkung_txt"]."',`boot_boot_id`='".$_POST["boot_txt"]."' WHERE `m_ausfahrt_id`=".$edit_array['m_ausfahrt_id'];
+    $sql = "UPDATE `m_ausfahrt` SET `datum`='".$_POST["datum_txt"]."',`steuermann`='$steuermann_id',`km`='".$_POST["km_txt"]."',`ruderziel`='".$_POST["ruderziel_txt"]."',`abfahrt`='$abfahrt',`ankunft`='$ankunft',`bemerkung`='".$_POST["bemerkung_txt"]."',`boot_boot_id`='$boot_id' WHERE `m_ausfahrt_id`=".$edit_array['m_ausfahrt_id'];
 
     mysql_query($sql, $connection);
     //header("Location: index.php");
+
+    // Zwischentabelle mit der Mannschaft befüllen
+    //$last_insert = mysql_insert_id();
+    $ms_array = explode(",", $_POST['mannschaft_txt']);
+
+    // Die Mannschaft der entsprechenden Ausfahrt leeren
+    $ms_delete_sql = mysql_query("DELETE FROM `mitglied_has_m_ausfahrt` WHERE `m_ausfahrt_m_ausfahrt_id`='" . $edit_array['m_ausfahrt_id'] . "'");
+        
+    foreach($ms_array as $ms_string) {
+         $ms_result = mysql_query("SELECT mitglied_id FROM mitglied WHERE (concat(name, ' ', vorname)) = '$ms_string'");
+         $ms_id = mysql_result($ms_result, 0);
+         echo $ms_id;
+         $ms_sql =  "INSERT INTO `mitglied_has_m_ausfahrt` (`mitglied_mitglied_id`, `m_ausfahrt_m_ausfahrt_id`)";
+         $ms_sql .= "VALUES ('$ms_id', '" . $edit_array['m_ausfahrt_id'] . "')";
+         mysql_query($ms_sql,$connection);
+    }
+    header("Location: index.php");
   }
 ?>
 
@@ -141,60 +168,100 @@
                 <input type="text" value="<?php echo $edit_array['datum']; ?>" class="form-control" id="datum_txt" name="datum_txt" placeholder="Datum"/>
               </div>
             </div>
-          
+
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Boot</label>
+              <label class="control-label col-md-4" for="boot_txt">Boot</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['boot_boot_id']; ?>" class='form-control' id='boot_txt' name='boot_txt'/>
+                  <input type='text' value=
+                  "<?php 
+                  // Bootsname abfragen
+                  $edit_boot_sql = mysql_query("SELECT b_name FROM boot WHERE boot_id='" . $edit_array['boot_boot_id'] . "'");
+                  $edit_boot = mysql_fetch_array($edit_boot_sql);
+                  echo $edit_boot['b_name']; 
+                  ?>" 
+                  div class='form-control' id='boot_txt' name='boot_txt'/>
                 </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Steuermann</label>
+              <label class="control-label col-md-4" for="steuermann_txt">Steuermann</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['steuermann']; ?>" class='form-control' id='steuermann_txt' name='steuermann_txt'/>
+                  <input type='text' value=
+                  "<?php 
+                  // Steuernmann abfragen
+                  $edit_sm_sql = mysql_query("SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $edit_array['steuermann'] . "'");
+                  $edit_sm = mysql_fetch_array($edit_sm_sql);
+                  echo $edit_sm['name_vorname']; 
+                  ?>"  
+                  div class='form-control' id='steuermann_txt' name='steuermann_txt'/>
                 </div>
             </div>
             
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Mannschaft</label>
+              <label class="control-label col-md-4" for="mannschaft_txt">Mannschaft</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['mitglied_id']; ?>" class='form-control' id='mannschaft_txt' name='mannschaft_txt'/>
+                  <input type='text' value=
+                  "<?php 
+                  // Mannschaft abfragen
+                  $id_abfrage = "SELECT `mitglied_mitglied_id` FROM `mitglied_has_m_ausfahrt` WHERE `m_ausfahrt_m_ausfahrt_id` = '" . $edit_array['m_ausfahrt_id'] . "'";
+                  $id_abfrage_result = mysql_query($id_abfrage);
+                  while ($id = mysql_fetch_array($id_abfrage_result)) {
+                    $ms_sql = "SELECT (concat(name, ' ', vorname)) AS name_vorname FROM mitglied WHERE mitglied_id = '" . $id['mitglied_mitglied_id'] . "'";
+                    $ms_result = mysql_query($ms_sql);
+                    while($ms = mysql_fetch_array($ms_result)){
+                      echo $ms['name_vorname'];
+                      echo ",";
+                }
+            }
+                  ?>"
+
+                  div class='form-control' id='mannschaft_txt' name='mannschaft_txt'/>
                 </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Kilometer</label>
+              <label class="control-label col-md-4" for="km_txt">Kilometer</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['km']; ?>" class='form-control' id='km_txt' name='km_txt'/>
+                  <input type='text' value="<?php 
+                  if($edit_array['km'] != '0'){
+                    echo $edit_array['km']; 
+                  }
+                  ?>" class='form-control' id='km_txt' name='km_txt' placeholder="KM eintragen"/>
                 </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Ruderziel</label>
+              <label class="control-label col-md-4" for="ruderziel_txt">Ruderziel</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['ruderziel']; ?>" class='form-control' id='ruderziel_txt' name='ruderziel_txt'/>
+                  <input type='text' value="<?php echo $edit_array['ruderziel']; ?>" class='form-control' id='ruderziel_txt' name='ruderziel_txt' placeholder="Ruderziel eintragen"/>
                 </div>
             </div>
  
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Abfahrt</label>
+              <label class="control-label col-md-4" for="abfahrt_txt">Abfahrt</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['abfahrt']; ?>" class='form-control' id='abfahrt_txt' name='abfahrt_txt'/>
+                  <input type='text' value=
+                  "<?php 
+                  if($edit_array['abfahrt'] != '00:00:00'){
+                    $abfahrt = explode(":", $edit_array['abfahrt']);
+                    echo "" . $abfahrt[0] . ":" . $abfahrt[1] . "";
+                  }
+                  ?>" 
+                  class='form-control' id='abfahrt_txt' name='abfahrt_txt' placeholder="hh:mm"/>
                 </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Ankunft</label>
+              <label class="control-label col-md-4" for="ankunft_txt">Ankunft</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['ankunft']; ?>" class='form-control' id='ankunft_txt' name='ankunft_txt'/>
+                  <input type='text' value="" class='form-control' id='ankunft_txt' name='ankunft_txt' placeholder="hh:mm"/>
                 </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-md-4" for="vorname_txt">Bemerkung</label>
+              <label class="control-label col-md-4" for="bemerkung_txt">Bemerkung</label>
                 <div class="col-md-6">
-                  <input type='text' value="<?php echo $edit_array['bemerkung']; ?>" class='form-control' id='bemerkung_txt' name='bemerkung_txt'/>
+                  <input type='text' value="<?php echo $edit_array['bemerkung']; ?>" class='form-control' id='bemerkung_txt' name='bemerkung_txt' placeholder="Bemerkung eintragen"/>
                 </div>
             </div>
 
@@ -242,6 +309,88 @@
     <script src="js/inputosaurus.js"></script>
 
 
+<!-- Autocomplete Boot -->
+  
+<?php
+  $auswahl_sql = "SELECT b_name FROM boot";
+  $boot = mysql_query($auswahl_sql);
+     
+  $array = array();
+  while($row = mysql_fetch_array($boot)){
+    array_push($array, $row['b_name']);
+  }
+?>
+
+<script>
+    $('#boot_txt').inputosaurus({
+      width : '270px',
+      autoCompleteSource : <?php print(json_encode($array)); ?>,
+      activateFinalResult : true,
+      change : function(ev){
+        $('#widget2_reflect').val(ev.target.value);
+      }
+    });
+
+    $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+    prettyPrint();
+</script>
+
+
+<!-- Autocomplete Steuermann -->
+
+<?php
+  $auswahl_sql = "SELECT name, vorname FROM mitglied";
+  $boot = mysql_query($auswahl_sql);
+     
+  $array = array();
+  while($row = mysql_fetch_array($boot)){
+    array_push($array, $row['name'] . " " . $row['vorname']);
+  }
+?>
+
+<script>
+    $('#steuermann_txt').inputosaurus({
+      width : '270px',
+      autoCompleteSource : <?php print(json_encode($array)); ?>,
+      activateFinalResult : true,
+      change : function(ev){
+        $('#widget2_reflect').val(ev.target.value);
+      }
+    });
+
+    $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+    prettyPrint();
+</script>
+
+
+<!-- Autocomplete Mannschaft -->
+
+<?php
+  $auswahl_sql = "SELECT name, vorname FROM mitglied";
+  $boot = mysql_query($auswahl_sql);
+     
+  $array = array();
+  while($row = mysql_fetch_array($boot)){
+    array_push($array, $row['name'] . " " . $row['vorname']);
+  }
+?>
+
+<script>
+    $('#mannschaft_txt').inputosaurus({
+      width : '270px',
+      autoCompleteSource : <?php print(json_encode($array)); ?>,
+      activateFinalResult : true,
+      change : function(ev){
+        $('#widget2_reflect').val(ev.target.value);
+      }
+    });
+
+    $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+    prettyPrint();
+</script>
   
 
   </body>
