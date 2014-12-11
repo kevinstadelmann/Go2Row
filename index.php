@@ -179,10 +179,10 @@ foreach($ms_array as $ms_string) {
       <!-- Seiten-Inhaltsverzeichnis -->
       <div class="col-sm-4" id="sidebar" role="navigation">
         <div class="list-group">
-<?php
-$kalender = $_POST['kalender'];
-echo $kalender;
-?> 
+        <?php
+        $kalender = $_POST['kalender'];
+        echo $kalender;
+        ?> 
 
 <div class='kalender'></div>
 </br>   
@@ -240,7 +240,7 @@ echo $kalender;
           <div class="form-group">
              <label class="control-label col-md-4" for="boot_txt">Boot</label>
               <div class="col-md-6">
-                  <input type="text" value="" id="boot_txt" name="boot_txt" div class="form-control" placeholder="Suchen"/>
+                  <input type="text" value="" id="boot_txt" name="boot_txt" class="form-control" placeholder="Suchen"/>
               </div>
           </div>
 
