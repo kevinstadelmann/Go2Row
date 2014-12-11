@@ -387,9 +387,8 @@ foreach($ms_array as $ms_string) {
             echo "<td>" . $row['km'] . "</td>";
             echo "<td>" . $row['ruderziel'] . "</td>";
 
-            //$abfahrt = explode$row['abfahrt'];
-            //$abfahrt;
-            echo "<td>" . $row['abfahrt'] . "</td>";
+            $abfahrt = explode(":", $row['abfahrt']);
+            echo "<td>" . $abfahrt[0] . ":" . $abfahrt[1] . "</td>";
             echo "<td>" . "-" . "</td>";
             echo "<td><a href='ausfahrt_edit.php?action=bearbeiten&id=".$row['m_ausfahrt_id']."'><span class='glyphicon glyphicon-pencil'></span></a></td>";
             echo "</tr>";
@@ -509,8 +508,10 @@ foreach($ms_array as $ms_string) {
             echo "<td>" . $row['ruderziel'] . "</td>";
 
 
-            echo "<td>" . $row['abfahrt'] . "</td>";
-            echo "<td>" . $row['ankunft'] . "</td>";
+            $abfahrt = explode(":", $row['abfahrt']);
+            echo "<td>" . $abfahrt[0] . ":" . $abfahrt[1] . "</td>";
+            $ankunft = explode(":", $row['ankunft']);
+            echo "<td>" . $ankunft[0] . ":" . $ankunft[1] . "</td>";
             echo "</tr>";
            }
         ?>
