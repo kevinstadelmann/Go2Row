@@ -49,7 +49,7 @@
          Fehlermeldung: ". mysql_error());
    }
 
-  echo "Erfolgreich zur Datenbank verbunden!";
+//  echo "Erfolgreich zur Datenbank verbunden!";
 
   //Dankenbankauswahl
   $db = mysql_select_db($database, $connection);
@@ -59,7 +59,7 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
-   var_dump($_POST);
+//   var_dump($_POST);
 
    // Form initialsieren mit Basis Werten
    $edit_sql = mysql_query("SELECT * FROM m_ausfahrt WHERE m_ausfahrt_id='".mysql_real_escape_string($_GET['id'])."'");
@@ -86,13 +86,14 @@
     mysql_query($sql, $connection);
     //header("Location: index.php");
 
-    // Zwischentabelle mit der Mannschaft befüllen
+    // Die Eingabe der Mannschaft in ein Array splitten
     //$last_insert = mysql_insert_id();
     $ms_array = explode(",", $_POST['mannschaft_txt']);
 
-    // Die Mannschaft der entsprechenden Ausfahrt leeren
+    // Mannschaft der entsprechenden Ausfahrt löschen
     $ms_delete_sql = mysql_query("DELETE FROM `mitglied_has_m_ausfahrt` WHERE `m_ausfahrt_m_ausfahrt_id`='" . $edit_array['m_ausfahrt_id'] . "'");
-        
+    
+    // Jedes Mitglied der Ausfahrt neu in die Zwischentabelle speichern    
     foreach($ms_array as $ms_string) {
          $ms_result = mysql_query("SELECT mitglied_id FROM mitglied WHERE (concat(name, ' ', vorname)) = '$ms_string'");
          $ms_id = mysql_result($ms_result, 0);
@@ -116,7 +117,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Go2Row</a>
+          <a class="navbar-brand" href="index.php">Go2Row</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -134,17 +135,7 @@
       <!-- Seiten-Inhaltsverzeichnis -->
       <div class="col-sm-3" id="sidebar" role="navigation">
         <div class="list-group">
-          <a href="admin_mitglied.php" class="list-group-item active">Benutzerverwaltung</a>
-          <a href="#" class="list-group-item">Reservationenverwalten</a>
-          <a href="admin_boot.php" class="list-group-item">Bootsverwaltung</a>
-          <a href="#" class="list-group-item">Bootsschaden verwalten</a>
-          <p>
-          Filter Möglichkeiten
-          Kalender
-          Nicht Abgeschlossene Ausfahrten auf einen Blick
-          Reservationen auf einen Blick
-          Suche nach Ausfahrten
-        </p>
+          <a href="index.php" class="list-group-item active">Zurück</a>
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
