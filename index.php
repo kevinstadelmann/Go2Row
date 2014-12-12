@@ -49,7 +49,7 @@
          Fehlermeldung: ". mysql_error());
    }
 
-  echo "Erfolgreich zur Datenbank verbunden!";
+  //echo "Erfolgreich zur Datenbank verbunden!";
 
   //Dankenbankauswahl
   $db = mysql_select_db($database, $connection);
@@ -59,7 +59,7 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
-   var_dump($_POST);
+  // var_dump($_POST);
   
   if(isset($_POST['ausfahrt_speichern'])){
     
@@ -104,7 +104,7 @@ foreach($ms_array as $ms_string) {
          // $n = 0;
          $ms_result = mysql_query("SELECT mitglied_id FROM mitglied WHERE (concat(name, ' ', vorname)) = '$ms_string'");
          $ms_id = mysql_result($ms_result, 0);
-         echo $ms_id;
+         //echo $ms_id;
          $ms_sql =  "INSERT INTO `mitglied_has_m_ausfahrt` (`mitglied_mitglied_id`, `m_ausfahrt_m_ausfahrt_id`)";
          $ms_sql .= "VALUES ('$ms_id', '$last_insert')";
          mysql_query($ms_sql,$connection);
@@ -149,6 +149,7 @@ foreach($ms_array as $ms_string) {
             <li class="active"><a href="index.php">Logbuch</a></li>
             <li><a href="statistik.php">Statistik</a></li>
             <li><a href="admin_mitglied.php">Admin</a></li>
+            <li><a href="help.php">Hilfe</a></li>
             <li><a></a></li>
             <li><a></a></li>
             <li><a></a></li>
@@ -179,11 +180,10 @@ foreach($ms_array as $ms_string) {
       <!-- Seiten-Inhaltsverzeichnis -->
       <div class="col-sm-4" id="sidebar" role="navigation">
         <div class="list-group">
-        <?php
-        $kalender = $_POST['kalender'];
-        echo $kalender;
-        ?> 
 
+</br>
+</br>
+</br>
 <div class='kalender'></div>
 </br>   
 <button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button>
@@ -196,7 +196,6 @@ foreach($ms_array as $ms_string) {
       <div class="col-xs-12 col-sm-8">
         <p class="pull-right visible-xs">
           <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
-            Toggle nav
           </button>
         </p>
 
@@ -310,10 +309,9 @@ foreach($ms_array as $ms_string) {
   </div><!-- End of Modal dialog -->
 </div><!-- End of Modal -->
 
-
-
     </br>
 
+ 
         <!-- Colapse 1-3 -->
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
           <!-- Colapse 1 -->
@@ -324,11 +322,20 @@ foreach($ms_array as $ms_string) {
               Aktuelle Ausfahrten
                <span style="float: right" class="badge">
                <?php
-               $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00'";
-               $ausfahrt = mysql_query($auswahl_sql);
+                if (isset($_POST['kalender'])){
+                  $kalender = $_POST['kalender'];
+                  $cut = explode(" ", $kalender);
+                  $js_date = $cut[1] . "-" . $cut[2] . "-" . $cut[3];
+                  $date_false = date_create_from_format('M-d-Y', $js_date);
+                  $cal_date = date_format($date_false, 'Y-m-d');
+                  } else {
+                    $cal_date = date("20y-m-d");
+                  }
+                $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00' AND datum = '$cal_date'";
+                $ausfahrt = mysql_query($auswahl_sql);
                 $menge_aktuell = mysql_num_rows($ausfahrt);
-               echo $menge_aktuell;
-                ?>
+                echo $menge_aktuell;
+              ?>
                </span> 
               </a>
               </h4>
@@ -349,8 +356,17 @@ foreach($ms_array as $ms_string) {
         <td><b>  </b></td>
         </tr>
         <?php
-          $datum = date("20y-m-d");
-          $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00'";
+        if (isset($_POST['kalender'])){
+                  $kalender = $_POST['kalender'];
+                  $cut = explode(" ", $kalender);
+                  $js_date = $cut[1] . "-" . $cut[2] . "-" . $cut[3];
+                  $date_false = date_create_from_format('M-d-Y', $js_date);
+                  $cal_date = date_format($date_false, 'Y-m-d');
+                } else {
+                  $cal_date = date("20y-m-d");
+                }
+          
+          $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00' AND datum = '$cal_date'";
           $ausfahrt = mysql_query($auswahl_sql);
           $menge_aktuell = mysql_num_rows($ausfahrt);
      
@@ -439,11 +455,20 @@ foreach($ms_array as $ms_string) {
               </a>
               <span style="float: right" class="badge">
                <?php
-               $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft != '00:00:00'";
-               $ausfahrt = mysql_query($auswahl_sql);
-                $menge_abgeschlossen = mysql_num_rows($ausfahrt);
-               echo $menge_abgeschlossen;
-                ?>
+                if (isset($_POST['kalender'])){
+                  $kalender = $_POST['kalender'];
+                  $cut = explode(" ", $kalender);
+                  $js_date = $cut[1] . "-" . $cut[2] . "-" . $cut[3];
+                  $date_false = date_create_from_format('M-d-Y', $js_date);
+                  $cal_date = date_format($date_false, 'Y-m-d');
+                  } else {
+                    $cal_date = date("20y-m-d");   
+                  }
+                $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft != '00:00:00' AND datum = '$cal_date'";
+                $ausfahrt = mysql_query($auswahl_sql);
+                $menge_aktuell = mysql_num_rows($ausfahrt);
+                echo $menge_aktuell;
+              ?>
                </span> 
               </h4>
             </div>
@@ -463,8 +488,16 @@ foreach($ms_array as $ms_string) {
         <td><b> Ankunft </b></td>
         </tr>
         <?php
-          $datum = date("20y-m-d");
-          $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft != '00:00:00'";
+           if (isset($_POST['kalender'])){
+                  $kalender = $_POST['kalender'];
+                  $cut = explode(" ", $kalender);
+                  $js_date = $cut[1] . "-" . $cut[2] . "-" . $cut[3];
+                  $date_false = date_create_from_format('M-d-Y', $js_date);
+                  $cal_date = date_format($date_false, 'Y-m-d');
+                } else {
+                  $cal_date = date("20y-m-d");
+                }
+          $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft != '00:00:00' AND datum = '$cal_date'";
           $ausfahrt = mysql_query($auswahl_sql);
      
           while($row = mysql_fetch_array($ausfahrt)){
@@ -526,8 +559,6 @@ foreach($ms_array as $ms_string) {
     </div> <!-- row -->
 
 
-
-
     <footer>
       <p>© Company 2014</p>
     </footer>
@@ -564,7 +595,7 @@ foreach($ms_array as $ms_string) {
 <script>
   $('.kalender').supercal({
       todayButton: false,
-      showInput: true,
+      showInput: false,
       transition: 'crossfade'
   });
   var myRedirect = function(redirectUrl, arg, value) {
