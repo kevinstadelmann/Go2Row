@@ -134,16 +134,7 @@
       <!-- Seiten-Inhaltsverzeichnis -->
       <div class="col-sm-3" id="sidebar" role="navigation">
         <div class="list-group">
-          <a href="admin_mitglied.php" class="list-group-item active">Benutzerverwaltung</a>
-          <a href="#" class="list-group-item">Reservationenverwalten</a>
-          <a href="admin_boot.php" class="list-group-item">Bootsverwaltung</a>
-          <a href="#" class="list-group-item">Bootsschaden verwalten</a>
-          <p>
-          Filter Möglichkeiten
-          Kalender
-          Nicht Abgeschlossene Ausfahrten auf einen Blick
-          Reservationen auf einen Blick
-          Suche nach Ausfahrten
+          <a href="index.php" class="list-group-item active">Zurück</a>
         </p>
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
@@ -267,7 +258,9 @@
 
             <div class="form-group">
               <div class="col-md-6">
+              <a href='index.php?action=datum="<?php echo $edit_array['datum']; ?>'>
                 <input type="submit" value="Abschliessen" name="ausfahrt_updaten" class="btn btn-primary btn-xs">
+              </a>
               </div>
             </div>
           </form>
