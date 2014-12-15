@@ -167,7 +167,7 @@ foreach($ms_array as $ms_string) {
             }
             echo $km;
             ?>
-            km gerudert!</a></li>
+            km gerudert</a></li>
 
           </ul>
         </div><!-- /.nav-collapse -->
@@ -187,7 +187,7 @@ foreach($ms_array as $ms_string) {
 <div class='kalender'></div>
 </br>   
 <button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button>
-      
+
 
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
@@ -340,7 +340,15 @@ foreach($ms_array as $ms_string) {
               </a>
               </h4>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseOne" class="panel-collapse collapse 
+            <?php
+                if (isset($_POST['kalender'])){
+                  echo "";
+                } else {
+                  echo "in";
+                }
+              ?>
+            " role="tabpanel" aria-labelledby="headingOne">
               <!-- Colapse 1 - Inhalt -->
               <div class="panel-body">
                 <table class="table table-striped">
@@ -472,7 +480,16 @@ foreach($ms_array as $ms_string) {
                </span> 
               </h4>
             </div>
-            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div id="collapseThree" class="panel-collapse collapse
+            <?php
+            // Wenn ein Datum gewählt ausgewählt wurde wird automatisch abgeschlossene Ausfahrten angezeigt
+                if (isset($_POST['kalender'])){
+                  echo "in";
+                } else {
+                  echo "";
+                }
+              ?>
+            " role="tabpanel" aria-labelledby="headingThree">
               <!-- Colapse 3 - Inhalt -->
               <div class="panel-body">
                 <table class="table table-striped">

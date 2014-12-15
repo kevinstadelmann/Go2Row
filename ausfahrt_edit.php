@@ -258,8 +258,7 @@
 
             <div class="form-group">
               <div class="col-md-6">
-              <a href='index.php?action=datum="<?php echo $edit_array['datum']; ?>'>
-                <input type="submit" value="Abschliessen" name="ausfahrt_updaten" class="btn btn-primary btn-xs">
+                <input type="submit" value="Abschliessen" name="ausfahrt_updaten" onClick="windows.location.href='index.php?datum="<?php echo $edit_array['bemerkung']; ?>"' "class="btn btn-primary btn-xs">
               </a>
               </div>
             </div>
