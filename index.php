@@ -187,11 +187,16 @@ foreach($ms_array as $ms_string) {
       </div>
     </br>
 <div class='kalender' style="margin:0 auto;"></div>
-</div>
-<p><button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button></p>
-<!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
 
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button></p>
+
+</br>
+</div>
+
+<!-- Button to trigger modal --> 
+  <p><a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span> Ausfahrt erfassen</a></p>
+
+<p><button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-list-alt"></span>  Reservation erfassen</button></p>
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
@@ -577,6 +582,10 @@ foreach($ms_array as $ms_string) {
 
 
     <footer>
+    </br>
+    </br>
+    </br>
+    </br>
       <p>© Go2Row Project Team</p>
     </footer>
   </div> <!-- container-->
