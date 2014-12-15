@@ -1,6 +1,6 @@
 <?php
-$file = './pdf/test.pdf';
-$filename = 'test.pdf'; /* Note: Always use .pdf at the end. */
+$file = './pdf/Benutzerhandbuch.pdf';
+$filename = 'Benutzerhandbuch.pdf';
 
 header('Content-type: application/pdf');
 header('Content-Disposition: inline; filename="' . $filename . '"');
