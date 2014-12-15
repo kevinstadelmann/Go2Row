@@ -25,14 +25,13 @@
 
 
   mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['mitglied_id'])."'");
-<<<<<<< HEAD
+
   mysql_query("DELETE FROM boot WHERE boot_id='".mysql_real_escape_string($_GET['boot_id'])."'");
   header("Location: admin.php");
-=======
+
  
  header("Location: admin.php");
 
 
->>>>>>> 9765b9d315f95adbae49f0d9c079aea930997843
 
   ?>

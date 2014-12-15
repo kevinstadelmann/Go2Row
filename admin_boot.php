@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>go2row</title>
+    <title>Go2Row</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -46,7 +46,7 @@
          Fehlermeldung: ". mysql_error());
    }
 
-  echo "Erfolgreich zur Datenbank verbunden!";
+  //echo "Erfolgreich zur Datenbank verbunden!";
 
   //Dankenbankauswahl
   $db = mysql_select_db($database, $connection);
@@ -54,7 +54,7 @@
   if (!$db){
     echo "Konnte die Datenbank nicht auswählen.";
    }  
-   var_dump($_POST);
+   //var_dump($_POST);
 
    // Wenn Boot-Speichern gedrückt wurde
   if(isset($_POST['boot_speichern'])){
@@ -93,13 +93,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Go2Row</a>
+          <a class="navbar-brand" href="index.php">Go2Row</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li> <a href="index.php">Logbuch</a></li>
             <li><a href="statistik.php">Statistik</a></li>
-            <li class="active"><a href="admin.php">Admin</a></li>
+            <li class="active"><a href="admin_boot.php">Admin</a></li>
+            <li><a href="help.php">Hilfe</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -225,9 +226,7 @@
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
 
-    <footer>
-      <p>© Company 2014</p>
-    </footer>
+  
   </div> <!-- container-->
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -239,7 +238,7 @@
 
             </div>
             <div class="modal-body">
-                 <h4>Sind Sie sicher, dass sie diesen Datensatz löschen wollen?</h4>
+                 <h4>Sind Sie sicher, dass sie dieses Boot löschen wollen?</h4>
 
             </div>
             <!--/modal-body-collapse -->

@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>go2row</title>
+    <title>Go2Row</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -47,7 +47,7 @@
          Fehlermeldung: ". mysql_error());
    }
 
-  echo "Erfolgreich zur Datenbank verbunden!";
+  //echo "Erfolgreich zur Datenbank verbunden!";
 
   //Dankenbankauswahl
   $db = mysql_select_db($database, $connection);
@@ -57,7 +57,7 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
-   var_dump($_POST);
+   //var_dump($_POST);
 
    // Form initialsieren
    $edit_sql = mysql_query("SELECT * FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
@@ -94,13 +94,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Go2Row</a>
+          <a class="navbar-brand" href="index.php">Go2Row</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li> <a href="index.php">Logbuch</a></li>
             <li><a href="statistik.php">Statistik</a></li>
             <li class="active"><a href="admin_mitglied.php">Admin</a></li>
+            <li><a href="help.php">Hilfe</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -116,13 +117,6 @@
           <a href="#" class="list-group-item">Reservationenverwalten</a>
           <a href="admin_boot.php" class="list-group-item">Bootsverwaltung</a>
           <a href="#" class="list-group-item">Bootsschaden verwalten</a>
-          <p>
-          Filter Möglichkeiten
-          Kalender
-          Nicht Abgeschlossene Ausfahrten auf einen Blick
-          Reservationen auf einen Blick
-          Suche nach Ausfahrten
-        </p>
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
@@ -196,9 +190,7 @@
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
 
-    <footer>
-      <p>© Company 2014</p>
-    </footer>
+
   </div> <!-- container-->
 
   

@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>go2row</title>
+    <title>Go2Row</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -580,14 +580,6 @@ foreach($ms_array as $ms_string) {
       </div> <!-- Hauptinhalt - Rechts -->
     </div> <!-- row -->
 
-
-    <footer>
-    </br>
-    </br>
-    </br>
-    </br>
-      <p>© Go2Row Project Team</p>
-    </footer>
   </div> <!-- container-->
 
 

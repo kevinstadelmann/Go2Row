@@ -129,18 +129,8 @@ fields: {
           message: "Bitte min. 1 Mitglied angeben!"
               }, // notEmpty
             } // validators
-          },  // mannschaft
-    km_txt: {
-      validators: {
-        //notEmpty: {
-          //message: "Für Kilometer sind nur Zahlen erlaubt!"
-          //    }, // notEmpty
-        regexp: {
-          regexp: /^[1-1000]+$/,
-          message: "Nur Zahlen zwischen 1-1000"
-        }
-            } // validators
-          } // km
+          }  // mannschaft
+    
     } // fields
     });
 $('#ausfahrt_form').on('shown.bs.modal', function() {
