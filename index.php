@@ -181,13 +181,16 @@ foreach($ms_array as $ms_string) {
       <div class="col-sm-4" id="sidebar" role="navigation">
         <div class="list-group">
 
-</br>
-</br>
-</br>
-<div class='kalender'></div>
-</br>   
-<button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button>
-
+<div class="panel panel-primary">
+       <div class="panel-heading">
+        <h4 class="panel-title">Filter</h4>
+      </div>
+    </br>
+<div class='kalender' style="margin:0 auto;"></div>
+</div>
+<p><button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-calendar"></span>  Anzeigen</button></p>
+<!-- Button to trigger modal --> 
+    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
 
         </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
@@ -212,9 +215,7 @@ foreach($ms_array as $ms_string) {
       -->
 
 
-<!-- Button to trigger modal --> 
-    <a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span>Ausfahrt eintragen</a>
-</br>
+
     <!-- Modal -->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
  <div class="modal-dialog">
@@ -309,7 +310,6 @@ foreach($ms_array as $ms_string) {
   </div><!-- End of Modal dialog -->
 </div><!-- End of Modal -->
 
-    </br>
 
  
         <!-- Colapse 1-3 -->
@@ -577,7 +577,7 @@ foreach($ms_array as $ms_string) {
 
 
     <footer>
-      <p>© Company 2014</p>
+      <p>© Go2Row Project Team</p>
     </footer>
   </div> <!-- container-->
 
