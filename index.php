@@ -196,8 +196,8 @@ foreach($ms_array as $ms_string) {
 <!-- Button to trigger modal --> 
   <p><a href="#myModal" role="button" class="btn btn-default btn-sm" data-toggle="modal"> <span class="glyphicon glyphicon-plus"></span> Ausfahrt erfassen</a></p>
 
-<p><button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-list-alt"></span>  Reservation erfassen</button></p>
-        </div>
+<!-- <p><button class="btn btn-default btn-sm show-date"> <span class="glyphicon glyphicon-list-alt"></span>  Reservation erfassen</button></p>
+ -->        </div>
       </div><!--Seiten-Inhaltsverzeichnis -->
 
       <!-- Hauptinhalt - Rechts -->
@@ -429,35 +429,6 @@ foreach($ms_array as $ms_string) {
               </div><!-- Colapse 1 - Inhalt -->
             </div>
           </div> <!-- Colapse 1 --> 
-
-          <!-- Colapse 2 -->    
-          <div class="panel panel-primary">
-            <div class="panel-heading" role="tab" id="headingTwo">
-              <h4 class="panel-title">
-                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                 Reservationen
-                <span style="float: right" class="badge">0
-   <!--             <?php
-               $auswahl_sql = "SELECT * FROM m_ausfahrt WHERE ankunft = '00:00:00'";
-               $ausfahrt = mysql_query($auswahl_sql);
-                $menge_aktuell = mysql_num_rows($ausfahrt);
-               echo $menge_aktuell;
-                ?>-->
-               </span>  
-                </a>
-              </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-              <!-- Colapse 2 - Inhalt -->
-              <div class="panel-body">
-                <table class="table table-striped">
-                  <tr class="warning">
-
-                  </tr>
-                </table>
-              </div><!-- Colapse 2 - Inhalt -->
-            </div>
-          </div><!-- Colapse 2 -->
 
           <!-- Colapse 3 -->
           <div class="panel panel-primary">
