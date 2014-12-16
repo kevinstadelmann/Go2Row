@@ -156,6 +156,7 @@ if(isset($_GET['filter_anwenden'])){
               <!-- Zeit - Filter -->
               <div class="form-group">
               <label class="control-label col-md-4" for="jahr_slc">Jahr</label>
+      
                 <div class="col-md-6">           
                   <select name="jahr_slc" size="1" class="form-control">
                     <?php
@@ -174,7 +175,7 @@ if(isset($_GET['filter_anwenden'])){
               <!-- Filter Anwenden - Button-->
          
                 <div class="col-md-6">
-                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="filter_anwenden" class="btn btn-primary btn-xs">
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" name="filter_anwenden" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-stats"></span> Anzeigen</button>
                 </div>
               
               <!-- End Filter Anwenden Button -->

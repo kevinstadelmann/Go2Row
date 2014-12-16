@@ -147,7 +147,7 @@ foreach($ms_array as $ms_string) {
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="index.php">Logbuch</a></li>
-            <li><a href="statistik.php">Statistik</a></li>
+            <li><a href="statistik.php?name_txt=&name_txt=&jahr_slc=2014&filter_anwenden=">Statistik</a></li>
             <li><a href="admin_mitglied.php">Admin</a></li>
             <li><a href="help.php">Hilfe</a></li>
             <li><a></a></li>
