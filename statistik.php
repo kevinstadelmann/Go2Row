@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Go2Row</title>
+    <title>go2row</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -56,52 +56,43 @@
     echo "Konnte die Datenbank nicht auswählen.";
    }
 
-
+// initialiesirung
+$statistik_text = "";
 // Statistik PHP
-       // Initiallod Filter_Text
-  $filter_text = "Seeclub Luzern";
-  // Arrays für json übergabe:
-  
+//if(isset($_GET['action']) && $_GET['action'] == 'delete'){
+  //mysql_query("DELETE FROM mitglied WHERE mitglied_id='".mysql_real_escape_string($_GET['id'])."'");
+if(isset($_GET['filter_anwenden'])){
+  //mysql_real_escape_string($_GET['name_txt']);
 
-    //echo "km";
-    //echo print_r($arr_km);
-    //echo "monate";
-    //echo print_r($arr_datum);
-
-
-  // Wenn Filter_anwenden Button gedrückt wurde
-  if(isset($_POST['filter_anwenden'])){
-    $arr_km = array();
-    $arr_datum = array();
-
-    // Filter-Text ändern
-    if($_POST['name_txt'] != ""){
-      $filter_text = $_POST['name_txt'];
-    }else{
-      $filter_text = "Seeclub Luzern";
-    }
-
-    // bisherige Daten zurücksetzten
+  // bisherige Daten zurücksetzten
     $arr_km = array();
     $arr_datum = array();
 
     // Jahr Filter auslesen
-    $jahr = $_POST['jahr_slc'];
+    $jahr = $_GET['jahr_slc'];
 
     // Wenn Textbox befüllt ist nach Mitglied filtern, sonst ganzen Club anzeigen
-    if($_POST['name_txt'] != ""){
+    if($_GET['name_txt'] != ""){
+
+    $statistik_text = $_GET['name_txt'];
 
     // Textbox Inhalt wieder aufsplitten um Mitglied in der DB zu finden
-    $filter_name = explode(" ", $_POST['name_txt']);
-    // Mitglieder ID ermitteln
+    $filter_name = explode(" ", $_GET['name_txt']);
+
+      // Mitglieder ID ermitteln
     $filter_name_sqlid = mysql_query("SELECT `mitglied_id` FROM `mitglied` WHERE ( name = '$filter_name[0]') AND ( vorname = '$filter_name[1]' )");
     $filter_name_id = mysql_result($filter_name_sqlid, 0);
+
+    //echo $filter_name_id;
 
     // Alle Ausfahrt-ID's "sammeln"
     $arr_data_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE year(datum)='$jahr' AND m_ausfahrt_id in (SELECT m_ausfahrt_m_ausfahrt_id FROM mitglied_has_m_ausfahrt WHERE mitglied_mitglied_id = '$filter_name_id') group by MONTH(datum)");
 
+
+
     }else{
-      $arr_data_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE year(datum)='$jahr' AND m_ausfahrt_id group by MONTH(datum)");
+      $statistik_text = "Seeclub Luzern";
+      $arr_data_sql = mysql_query("SELECT sum(km) as km , month(datum)as datum FROM m_ausfahrt WHERE year(datum)='$jahr' AND m_ausfahrt_id group by MONTH(datum)");  
     }
 
 
@@ -110,18 +101,9 @@
       array_push($arr_km, $row['km']);
       array_push($arr_datum, $row['datum']);
     }
-  }else{
-    $arr_km = array();
-  $arr_datum = array();
 
+}
 
-  // Standard Statistik anzeigen (z.B. Ebene Club)
-  $arr_club_sql = mysql_query("SELECT sum(km) as km, month(datum) as datum FROM m_ausfahrt group by MONTH(datum)");
-  while( $row = mysql_fetch_array($arr_club_sql)){
-      array_push($arr_km, $row['km']);
-      array_push($arr_datum, $row['datum']);
-    }
-    }// End of Isset
   
 
 
@@ -150,24 +132,20 @@
       </div><!-- /.container -->
     </nav><!-- /.navbar -->
 
-<!-- HAUPTINHALT -->
+  <!-- HAUPTINHALT -->
   <div class="container">
     <div class="row">
 
-      <div class="col-sm-4" id="sidebar" role="navigation">
+      <div class="col-sm-3" id="sidebar" role="navigation">
         <div class="panel panel-primary">
           <div class="panel-heading">
             Filter
-          </div>
+          </div> 
         <!-- Filter Formular aufbauen -->
       </br>
-
-
-          <form class="form-horizontal" id="statistik_form" name="commentform" method="post" action="statistik.php"> 
-            
-
-
+          <form class="form-horizontal" id="statistik_form" name="commentform" method="get" action="statistik.php"> 
             <div class="form-group">
+
               <!-- Name - Filter -->
               <label class="control-label col-md-4" for="name_txt">Name</label>
               <div class="col-md-6">
@@ -175,9 +153,9 @@
               </div>
               <!-- End Name -->
 
-              <!-- Jahr - Filter -->
+              <!-- Zeit - Filter -->
               <div class="form-group">
-              <label class="control-label col-md-4" for="kategorie_slc">Jahr</label>
+              <label class="control-label col-md-4" for="jahr_slc">Jahr</label>
                 <div class="col-md-6">           
                   <select name="jahr_slc" size="1" class="form-control">
                     <?php
@@ -193,35 +171,37 @@
                 </div>
             </div>
 
-
-              <!-- Filter Anwenden - Button-->             
+              <!-- Filter Anwenden - Button-->
+         
                 <div class="col-md-6">
-                  <input type="submit" name="filter_anwenden" class="btn btn-primary btn-xs">
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="filter_anwenden" class="btn btn-primary btn-xs">
                 </div>
+              
               <!-- End Filter Anwenden Button -->
 
             </div>
           </form>
         </div>
-
         
       </div><!--Seiten-Inhaltsverzeichnis -->
    
       <!-- Hauptinhalt - Rechts -->
-      <div class="col-xs-12 col-sm-8">
+      <div class="col-xs-12 col-sm-9">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            Statistik - geruderte KM / Monat von <?php echo $filter_text?>
+            Statistik von <?php echo $statistik_text?>
           </div> 
 
           <!-- Statistik anzeigen -->
-          <canvas id="buyers" width="750"height="400"></canvas>
+          <canvas id="buyers" width="800"height="400"></canvas>
  
       </div> <!-- Hauptinhalt - Rechts -->
     </div>
     </div> <!-- row -->
-  
+
   </div> <!-- container-->
+
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -244,35 +224,37 @@
      <script src="js/inputosaurus.js"></script>
      <!--<script src="bower_components/chart/chart.js"></script>-->
 
+
+
      <!-- Statistik Javascript -->
 
           <script type="text/javascript">
-            var buyerData = {
-            labels: <?php print(json_encode($arr_datum)); ?>,
-            datasets: [
-            {   
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(151,187,205,1)",
-                data: <?php print(json_encode($arr_km)); ?>
-            },
-            {
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                //data: [192,207]
-            }
-              ]
-            };
-     
+
+      var buyerData = {
+          labels : <?php print(json_encode($arr_datum)); ?>,
+          datasets: [
+        {   
+            label: "Jahr1",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: <?php print(json_encode($arr_km)); ?>
+        },
+        {
+            label: "Jahr2",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            //data: [20,30,40,30,20,5]
+        }
+    ]
+      }
           var buyers = document.getElementById('buyers').getContext('2d');
           new Chart(buyers).Line(buyerData);
      </script>
@@ -292,7 +274,7 @@
 
     <script>
         $('#name_txt').inputosaurus({
-          width : '200px',
+          width : '125px',
           autoCompleteSource : <?php print(json_encode($array)); ?>,
           activateFinalResult : true,
           change : function(ev){
@@ -302,6 +284,7 @@
 
         $('.form-control').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
+        prettyPrint();
       </script>
 
   </body>
